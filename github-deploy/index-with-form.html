@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>免费AI创业诊断 | 马来西亚中文创业者</title>
+    <style>
+        /* 样式与之前相同，为了简洁省略 */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; }
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #333; line-height: 1.6; min-height: 100vh; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; padding: 30px; text-align: center; }
+        .header h1 { font-size: 2rem; margin-bottom: 10px; font-weight: 700; }
+        .content { padding: 40px 30px; }
+        /* ... 其他样式 ... */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>免费AI创业诊断</h1>
+            <p>15个问题，5分钟，发现你的AI应用潜力</p>
+            <p>专为马来西亚中文创业者设计</p>
+        </div>
+        
+        <div class="content">
+            <!-- 诊断工具内容 -->
+            <div id="app">
+                <!-- 这里会由JavaScript动态生成内容 -->
+            </div>
+            
+            <!-- 隐藏的表单用于提交到Formspree -->
+            <form id="data-form" action="https://formspree.io/f/你的formspree-id" method="POST" style="display: none;">
+                <input type="hidden" name="诊断报告" id="report-data">
+                <input type="hidden" name="联系方式" id="contact-info">
+                <input type="hidden" name="时间戳" id="timestamp">
+                <button type="submit" id="form-submit">提交</button>
+            </form>
+        </div>
+        
+        <div class="footer">
+            <p>© 2026 AI创业诊断 | 专为马来西亚中文创业者设计</p>
+            <p>你的回答将用于生成个性化AI应用建议，我们尊重你的隐私</p>
+        </div>
+    </div>
+
+    <script>
+        // 简化的诊断工具逻辑
+        // 完整版本请参考 complete-diagnosis-tool.html
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // 显示简单的欢迎界面
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div style="text-align: center; padding: 40px 0;">
+                    <h2 style="color: #4f46e5; margin-bottom: 20px;">欢迎使用AI创业诊断工具</h2>
+                    <p style="margin-bottom: 30px; font-size: 1.1rem;">
+                        这个工具正在部署中，完整版本即将上线！
+                    </p>
+                    <div style="background: #f0f9ff; padding: 25px; border-radius: 15px; margin: 30px 0;">
+                        <h3 style="color: #0ea5e9; margin-bottom: 15px;">🚀 即将上线的功能</h3>
+                        <ul style="text-align: left; margin-left: 20px;">
+                            <li>15个问题AI创业诊断</li>
+                            <li>个性化AI应用潜力评估</li>
+                            <li>节省时间和成本估算</li>
+                            <li>专属工具推荐和行动计划</li>
+                            <li>免费30分钟专家咨询</li>
+                        </ul>
+                    </div>
+                    <div style="margin-top: 40px;">
+                        <p><strong>想要第一时间体验？</strong></p>
+                        <form id="subscribe-form" style="max-width: 400px; margin: 20px auto;">
+                            <input type="email" name="email" placeholder="输入你的邮箱" required 
+                                   style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px;">
+                            <button type="submit" 
+                                    style="background: #10b981; color: white; padding: 12px 30px; border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer; width: 100%;">
+                                通知我上线
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            `;
+            
+            // 简单的订阅表单提交
+            document.getElementById('subscribe-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = this.querySelector('input[name="email"]').value;
+                
+                // 这里可以连接到Formspree或邮件服务
+                alert(`感谢订阅！我们会在工具上线时通知 ${email}`);
+                this.reset();
+            });
+        });
+    </script>
+</body>
+</html>

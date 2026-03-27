@@ -1,0 +1,16 @@
+{
+  "name": "ai-startup-diagnosis",
+  "version": "1.0.0",
+  "description": "马来西亚中文创业者AI应用潜力诊断工具",
+  "main": "index.html",
+  "scripts": {
+    "start": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "keywords": ["AI", "创业", "马来西亚", "诊断工具"],
+  "author": "Brandon Wong",
+  "license": "MIT",
+  "devDependencies": {
+    "@vercel/static": "^0.4.0"
+  }
+}

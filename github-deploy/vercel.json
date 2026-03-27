@@ -1,0 +1,23 @@
+{
+  "name": "ai-startup-diagnosis",
+  "version": 2,
+  "builds": [
+    {
+      "src": "*.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/landing",
+      "dest": "/landing.html"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
+}
