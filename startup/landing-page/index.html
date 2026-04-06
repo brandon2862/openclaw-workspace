@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgentKerja - AI Agent 团队为你的创业助力</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 20px 0;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        .logo span {
+            color: #f97316;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        
+        .btn-primary {
+            background: #f97316;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #1e3a8a;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        /* Features */
+        .features {
+            padding: 80px 0;
+            background: #f8fafc;
+        }
+        
+        .features h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: #1e3a8a;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            color: #1e3a8a;
+            margin-bottom: 15px;
+        }
+        
+        /* Pricing */
+        .pricing {
+            padding: 80px 0;
+        }
+        
+        .pricing h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: #1e3a8a;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .pricing-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+        
+        .pricing-card.featured {
+            border-color: #f97316;
+            position: relative;
+        }
+        
+        .pricing-card.featured::before {
+            content: "最受欢迎";
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #f97316;
+            color: white;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .price {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #1e3a8a;
+        }
+        
+        .price span {
+            font-size: 1rem;
+            color: #64748b;
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin: 30px 0;
+            text-align: left;
+        }
+        
+        .pricing-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .pricing-features li::before {
+            content: "✅ ";
+        }
+        
+        /* How it Works */
+        .how-it-works {
+            padding: 80px 0;
+            background: #1e3a8a;
+            color: white;
+        }
+        
+        .how-it-works h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+        }
+        
+        .steps {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .step {
+            text-align: center;
+            max-width: 250px;
+        }
+        
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: #f97316;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 auto 20px;
+        }
+        
+        /* CTA */
+        .cta {
+            padding: 80px 0;
+            text-align: center;
+            background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+            color: white;
+        }
+        
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .cta p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        
+        .cta .btn {
+            background: white;
+            color: #f97316;
+            font-size: 1.2rem;
+            padding: 15px 40px;
+        }
+        
+        /* Footer */
+        footer {
+            background: #1e293b;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        footer p {
+            opacity: 0.7;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">Agent<span>Kerja</span></div>
+                <div class="nav-links">
+                    <a href="#features">功能</a>
+                    <a href="#pricing">价格</a>
+                    <a href="#how">如何运作</a>
+                    <a href="#" class="btn btn-primary">开始使用</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <h1>🤖 你的 AI 员工团队，随时待命</h1>
+            <p>AgentKerja 帮助马来西亚创业者用 AI 完成市场调研、内容创作、数据分析等工作。<br>无需技术背景，用自然语言就能指挥你的 AI 团队。</p>
+            <div class="hero-buttons">
+                <a href="#" class="btn btn-primary">免费试用 7 天</a>
+                <a href="#how" class="btn btn-secondary">了解更多</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2>🚀 你的 AI 团队包括</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>调研专家</h3>
+                    <p>市场调研、竞品分析、行业趋势追踪。帮你做出数据驱动的决策。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">✍️</div>
+                    <h3>内容创作者</h3>
+                    <p>社交媒体帖子、营销文案、产品描述。支持中英马三语。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>数据分析师</h3>
+                    <p>销售数据分析、财务报表、趋势预测。让数据说话。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📧</div>
+                    <h3>邮件专家</h3>
+                    <p>商务邮件、营销邮件、客户回复。专业的邮件沟通。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>设计顾问</h3>
+                    <p>品牌设计建议、Logo 概念、视觉方案。打造专业形象。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>任务协调</h3>
+                    <p>智能任务分发、多 Agent 协作、进度追踪。一站式管理。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- How it Works -->
+    <section class="how-it-works" id="how">
+        <div class="container">
+            <h2>📱 3 步开始使用</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>添加 Bot</h3>
+                    <p>在 Telegram 搜索 @AgentKerjaBot 并开始对话</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>描述需求</h3>
+                    <p>用自然语言告诉 AI 你需要什么</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>获取结果</h3>
+                    <p>AI 团队协作完成任务，你审核即可</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Pricing -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <h2>💰 简单透明的定价</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Basic</h3>
+                    <div class="price">RM99<span>/月</span></div>
+                    <ul class="pricing-features">
+                        <li>100 次任务/月</li>
+                        <li>调研专家</li>
+                        <li>内容创作者</li>
+                        <li>邮件支持</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary">选择方案</a>
+                </div>
+                <div class="pricing-card featured">
+                    <h3>Pro</h3>
+                    <div class="price">RM299<span>/月</span></div>
+                    <ul class="pricing-features">
+                        <li>500 次任务/月</li>
+                        <li>全部 6 个 Agent</li>
+                        <li>自动化工作流</li>
+                        <li>优先支持</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary">选择方案</a>
+                </div>
+                <div class="pricing-card">
+                    <h3>Enterprise</h3>
+                    <div class="price">RM999<span>/月</span></div>
+                    <ul class="pricing-features">
+                        <li>无限任务</li>
+                        <li>全部功能</li>
+                        <li>API 接入</li>
+                        <li>专属支持</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary">联系销售</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA -->
+    <section class="cta">
+        <div class="container">
+            <h2>准备好让你的创业更轻松了吗？</h2>
+            <p>加入 100+ 马来西亚创业者，用 AI 团队加速你的业务</p>
+            <a href="#" class="btn">立即开始免费试用</a>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>© 2026 AgentKerja. Made with 🤖 in Malaysia.</p>
+        </div>
+    </footer>
+</body>
+</html>

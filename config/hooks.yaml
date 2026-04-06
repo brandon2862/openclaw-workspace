@@ -1,0 +1,108 @@
+# 🪝 OpenClaw Hooks 系统配置
+# 基于 Claude Code 架构设计
+# 
+# 事件类型:
+#   session_start - 会话开始时
+#   session_end   - 会话结束时
+#   pre_message   - 用户消息处理前
+#   post_message  - 消息处理后
+#   pre_tool      - 工具调用前
+#   post_tool     - 工具调用后
+#   heartbeat     - 心跳触发时
+#   error         - 错误发生时
+#
+# 返回值行为:
+#   continue = 继续执行
+#   block    = 阻止操作
+#   warn     = 警告但继续
+
+hooks:
+  # 会话开始时的钩子
+  session_start:
+    - name: "load-memory"
+      description: "加载记忆文件"
+      action: "read_files"
+      files:
+        - "~/.openclaw/workspace/MEMORY.md"
+        - "~/.openclaw/workspace/USER.md"
+        - "memory/YYYY-MM-DD.md"
+      priority: 100
+    
+    - name: "check-reminders"
+      description: "检查待办事项"
+      action: "check_pending"
+      priority: 90
+
+  # 会话结束时的钩子
+  session_end:
+    - name: "save-memory"
+      description: "保存会话摘要到记忆"
+      action: "save_summary"
+      priority: 100
+    
+    - name: "update-daily"
+      description: "更新每日记忆文件"
+      action: "update_daily_memory"
+      priority: 90
+
+  # 消息处理前的钩子
+  pre_message:
+    - name: "context-check"
+      description: "检查上下文容量"
+      action: "check_context_level"
+      threshold: 0.8  # 80% 时警告
+      priority: 100
+
+  # 工具调用前的钩子
+  pre_tool:
+    - name: "safety-check"
+      description: "安全检查"
+      rules:
+        - pattern: "exec:rm -rf /*"
+          action: "block"
+          message: "危险操作被阻止"
+        - pattern: "exec:DROP TABLE"
+          action: "block"
+          message: "数据库删除操作需要确认"
+      priority: 100
+    
+    - name: "log-tool-use"
+      description: "记录工具使用"
+      action: "log"
+      log_file: "~/.openclaw/workspace/data/tool-usage.log"
+      priority: 50
+
+  # 工具调用后的钩子
+  post_tool:
+    - name: "update-state"
+      description: "更新状态"
+      action: "update_file_state"
+      priority: 50
+
+  # 心跳钩子
+  heartbeat:
+    - name: "memory-maintenance"
+      description: "记忆维护"
+      action: "maintain_memory"
+      interval: 30  # 每 30 分钟
+      priority: 100
+
+  # 错误处理钩子
+  error:
+    - name: "log-error"
+      description: "记录错误"
+      action: "log_error"
+      priority: 100
+    
+    - name: "notify-user"
+      description: "通知用户"
+      action: "notify"
+      threshold: "critical"
+      priority: 90
+
+# 钩子执行配置
+config:
+  timeout: 30  # 钩子超时时间（秒）
+  parallel: false  # 是否并行执行同优先级钩子
+  fail_fast: true  # 钩子失败时是否停止
+  log_level: "info"  # 日志级别
