@@ -1,0 +1,30 @@
+{
+  "last_backup": 1774887020,
+  "last_file_count": 47895,
+  "last_backup_size": 376581,
+  "total_backups": 2,
+  "backup_history": [
+    {
+      "name": "backup-20260330-230621",
+      "time": 1774883216,
+      "size": 180669
+    },
+    {
+      "name": "backup-20260331-0010",
+      "time": 1774887020,
+      "size": 376581
+    }
+  ],
+  "created": "2026-03-30T15:06:21Z",
+  "last_updated": "2026-03-30T19:04:24.000Z",
+  "notes": "First backup created by OpenClaw AI Assistant Framework smart-backup system. Backup script has some issues with jq parsing and cleanup logic that need to be fixed. Second backup performed at 2026-03-31 00:10 UTC. Fifth check performed at 2026-03-30 19:04 UTC - no backup needed (file count: 47895, change: 0 since last check, time since last backup: ~19h). Backup triggers: 24h interval or 10,000 file changes.",
+  "status": "active",
+  "next_backup_check": 1774901064,
+  "backup_dir": "/home/brandonclaw/.openclaw/backups",
+  "framework": {
+    "name": "OpenClaw AI Assistant Framework",
+    "component": "smart-backup",
+    "version": "1.0",
+    "implemented": "2026-03-30"
+  }
+}

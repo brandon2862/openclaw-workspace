@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN" :class="{ dark: isDark }">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Electron Vue App - 现代化的 Windows 桌面应用示例" />
+    <meta name="keywords" content="Electron, Vue.js, TypeScript, 桌面应用, Windows" />
+    <meta name="author" content="Brandon Wong" />
+    
+    <title>Electron Vue App</title>
+    
+    <!-- 应用图标 -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    
+    <!-- 预加载脚本 -->
+    <script type="module" src="/src/preload/index.ts"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    
+    <!-- 主应用脚本 -->
+    <script type="module" src="/src/renderer/main.ts"></script>
+    
+    <!-- 环境变量 -->
+    <script>
+      // 设置环境变量
+      window.__ELECTRON_ENV__ = {
+        isDev: import.meta.env.DEV,
+        isProd: import.meta.env.PROD,
+        mode: import.meta.env.MODE,
+        platform: navigator.platform,
+        userAgent: navigator.userAgent
+      }
+      
+      // 初始化主题
+      const savedTheme = localStorage.getItem('theme') || 'light'
+      const isDark = savedTheme === 'dark' || (savedTheme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+      document.documentElement.classList.toggle('dark', isDark)
+      
+      // 监听系统主题变化
+      if (savedTheme === 'auto') {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+          document.documentElement.classList.toggle('dark', e.matches)
+        })
+      }
+      
+      // 错误处理
+      window.addEventListener('error', (event) => {
+        console.error('全局错误:', event.error)
+        
+        // 在生产环境中，可以发送错误报告
+        if (window.__ELECTRON_ENV__.isProd && window.electronAPI) {
+          window.electronAPI.app.sendErrorReport?.({
+            message: event.error?.message,
+            stack: event.error?.stack,
+            timestamp: new Date().toISOString(),
+            url: window.location.href
+          })
+        }
+      })
+      
+      // 未处理的 Promise 拒绝
+      window.addEventListener('unhandledrejection', (event) => {
+        console.error('未处理的 Promise 拒绝:', event.reason)
+      })
+      
+      // 应用加载完成
+      window.addEventListener('DOMContentLoaded', () => {
+        console.log('应用加载完成')
+        
+        // 移除加载动画（如果有的话）
+        const loading = document.getElementById('loading')
+        if (loading) {
+          loading.style.display = 'none'
+        }
+      })
+    </script>
+    
+    <!-- 加载动画 -->
+    <div id="loading" style="
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--el-bg-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.3s ease;
+    ">
+      <div style="text-align: center;">
+        <div style="
+          width: 50px;
+          height: 50px;
+          border: 3px solid var(--el-border-color);
+          border-top-color: var(--el-color-primary);
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+          margin: 0 auto 20px;
+        "></div>
+        <p style="color: var(--el-text-color-secondary); font-size: 14px;">
+          正在加载应用...
+        </p>
+      </div>
+    </div>
+    
+    <style>
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+  </body>
+</html>

@@ -1,0 +1,108 @@
+{
+  "timestamp": "2026-03-30T16:02:00.000Z",
+  "health_check_type": "scheduled",
+  "check_number": 5,
+  "overall_status": "healthy",
+  "issues": [
+    {
+      "severity": "resolved",
+      "issue": "Model pool configuration mismatch - AUTO FIXED",
+      "details": "Configuration specified zai/glm-* models but system uses openai/deepseek models. Configuration has been automatically updated to use available models.",
+      "resolution": "Configuration updated successfully",
+      "fix_timestamp": "2026-03-30T00:07:28Z",
+      "resolved_at": "2026-03-30T00:07:28Z",
+      "current_status": "Configuration now matches available models"
+    }
+  ],
+  "actual_models": {
+    "available": [
+      {
+        "name": "openai/gpt-5.4",
+        "status": "healthy",
+        "role": "default"
+      },
+      {
+        "name": "deepseek/deepseek-chat",
+        "status": "healthy",
+        "role": "fallback"
+      },
+      {
+        "name": "deepseek/deepseek-reasoner",
+        "status": "healthy",
+        "role": "fallback"
+      },
+      {
+        "name": "openai/gpt-5.4-mini",
+        "status": "healthy",
+        "role": "fallback"
+      },
+      {
+        "name": "openai/gpt-5.4-nano",
+        "status": "healthy",
+        "role": "fallback"
+      },
+      {
+        "name": "openai/gpt-4o-mini",
+        "status": "healthy",
+        "role": "fallback"
+      }
+    ],
+    "configured_but_missing": [
+      "zai/glm-4.7",
+      "zai/glm-5",
+      "zai/glm-4.6v"
+    ]
+  },
+  "model_pools": {
+    "fast": {
+      "configured_original": "zai/glm-4.7",
+      "configured_current": "deepseek/deepseek-chat",
+      "fallback": "openai/gpt-5.4-nano",
+      "actual_status": "healthy",
+      "notes": "Using deepseek/deepseek-chat for fast responses"
+    },
+    "smart": {
+      "configured_original": "zai/glm-5",
+      "configured_current": "openai/gpt-5.4",
+      "fallback": "deepseek/deepseek-reasoner",
+      "actual_status": "healthy",
+      "notes": "Using openai/gpt-5.4 for complex reasoning"
+    },
+    "text": {
+      "configured_original_primary": "zai/glm-5",
+      "configured_original_fallback": "zai/glm-4.7",
+      "configured_current": "deepseek/deepseek-reasoner",
+      "fallback": "openai/gpt-5.4",
+      "actual_status": "healthy",
+      "notes": "Using deepseek/deepseek-reasoner for text processing"
+    },
+    "vision": {
+      "configured_original": "zai/glm-4.6v",
+      "configured_current": "openai/gpt-5.4",
+      "fallback": "openai/gpt-4o-mini",
+      "actual_status": "limited",
+      "notes": "No dedicated vision model. Using GPT-5.4 which has some vision capabilities."
+    }
+  },
+  "recommendations": [
+    {
+      "priority": "low",
+      "action": "Add dedicated vision model",
+      "description": "Consider adding a dedicated vision model provider for better image/video analysis",
+      "estimated_effort": "medium",
+      "status": "pending"
+    },
+    {
+      "priority": "low",
+      "action": "Verify configuration with user",
+      "description": "Notify user about configuration update for transparency",
+      "estimated_effort": "low",
+      "status": "pending"
+    }
+  ],
+  "next_check": "2026-03-30T22:02:00.000Z",
+  "check_interval_hours": 6,
+  "framework_version": "Work-Fisher/openclaw-ai-assistant-framework",
+  "operational_status": "stable",
+  "days_operational": 1
+}

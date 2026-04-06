@@ -1,0 +1,19 @@
+{
+    "name": "todo-app/backend",
+    "description": "Todo App Backend API",
+    "type": "project",
+    "require": {
+        "php": "^8.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Todo App Team"
+        }
+    ],
+    "minimum-stability": "stable"
+}

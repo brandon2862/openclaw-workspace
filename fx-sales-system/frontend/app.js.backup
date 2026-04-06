@@ -1,0 +1,492 @@
+        // 导出月度报表
+        async exportMonthlyReport() {
+            this.exportingReport = true;
+            
+            try {
+                const token = localStorage.getItem('token');
+                const url = `${API_BASE_URL}/reports/monthly/export?year=${this.reportYear}&month=${this.reportMonth}`;
+                
+                // 使用fetch下载文件
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('导出失败');
+                }
+                
+                // 获取blob并创建下载链接
+                const blob = await response.blob();
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.download = `FX_Sales_Report_${this.reportYear}_${this.reportMonth}.xlsx`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(downloadUrl);
+                
+            } catch (error) {
+                alert(error.message || '导出报表失败');
+            } finally {
+                this.exportingReport = false;
+            }
+        }
+    }
+});
+
+// 添加CSS样式
+const style = document.createElement('style');
+style.textContent = `
+.option-card {
+    background: white;
+    border: 2px solid #e4e7ed;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.option-card:hover {
+    border-color: #409EFF;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(64, 158, 255, 0.1);
+}
+
+.option-card.active {
+    border-color: #409EFF;
+    background-color: #ecf5ff;
+}
+
+.option-card.active .option-1 { color: #409EFF; }
+.option-card.active .option-2 { color: #67C23A; }
+.option-card.active .option-3 { color: #E6A23C; }
+.option-card.active .option-4 { color: #8A2BE2; }
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #e4e7ed;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #303133;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #909399;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.modal-close:hover {
+    color: #303133;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.modal-footer {
+    padding: 20px 24px;
+    border-top: 1px solid #e4e7ed;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.chart-container {
+    width: 100%;
+    height: 300px;
+    margin: 20px 0;
+}
+
+.report-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.summary-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.summary-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: #409EFF;
+    margin: 10px 0;
+}
+
+.summary-label {
+    color: #909399;
+    font-size: 14px;
+}
+
+.tab-container {
+    display: flex;
+    border-bottom: 1px solid #e4e7ed;
+    margin-bottom: 20px;
+}
+
+.tab {
+    padding: 12px 24px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    color: #606266;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.tab:hover {
+    color: #409EFF;
+}
+
+.tab.active {
+    color: #409EFF;
+    border-bottom-color: #409EFF;
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-success {
+    background-color: #f0f9eb;
+    color: #67c23a;
+}
+
+.badge-warning {
+    background-color: #fdf6ec;
+    color: #e6a23c;
+}
+
+.badge-danger {
+    background-color: #fef0f0;
+    color: #f56c6c;
+}
+
+.badge-info {
+    background-color: #f4f4f5;
+    color: #909399;
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+
+.status-active {
+    background-color: #67c23a;
+}
+
+.status-inactive {
+    background-color: #f56c6c;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltip-text {
+    visibility: hidden;
+    width: 200px;
+    background-color: #303133;
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 12px;
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #409EFF;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 16px 24px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    animation: slideIn 0.3s ease-out;
+}
+
+.notification.success {
+    background-color: #67c23a;
+}
+
+.notification.error {
+    background-color: #f56c6c;
+}
+
+.notification.info {
+    background-color: #409EFF;
+}
+
+.notification.warning {
+    background-color: #e6a23c;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        margin: 10px;
+    }
+    
+    .report-summary {
+        grid-template-columns: 1fr;
+    }
+    
+    .tab-container {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    .tab {
+        padding: 10px 16px;
+    }
+}
+`;
+document.head.appendChild(style);
+
+// 挂载Vue应用
+app.mount('#app');
+
+// 全局错误处理
+window.addEventListener('error', function(event) {
+    console.error('全局错误:', event.error);
+});
+
+// 全局未处理的Promise拒绝
+window.addEventListener('unhandledrejection', function(event) {
+    console.error('未处理的Promise拒绝:', event.reason);
+});
+
+// 添加键盘快捷键
+document.addEventListener('keydown', function(event) {
+    // Ctrl+S 保存当前表单
+    if (event.ctrlKey && event.key === 's') {
+        event.preventDefault();
+        
+        const appInstance = app._instance;
+        if (appInstance) {
+            if (appInstance.currentPage === 'new-transaction') {
+                appInstance.saveTransaction();
+            }
+        }
+    }
+    
+    // Esc 关闭模态框
+    if (event.key === 'Escape') {
+        const appInstance = app._instance;
+        if (appInstance && appInstance.showAddCustomer) {
+            appInstance.showAddCustomer = false;
+        }
+    }
+    
+    // 数字键1-4选择报价选项
+    if (event.key >= '1' && event.key <= '4' && !event.ctrlKey && !event.altKey) {
+        const appInstance = app._instance;
+        if (appInstance && appInstance.currentPage === 'new-transaction') {
+            const option = parseInt(event.key);
+            appInstance.selectOption(option);
+        }
+    }
+});
+
+// 添加页面可见性变化处理
+document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) {
+        // 页面重新可见时刷新数据
+        const appInstance = app._instance;
+        if (appInstance && appInstance.isAuthenticated) {
+            appInstance.loadDashboard();
+        }
+    }
+});
+
+// 添加离线检测
+window.addEventListener('online', function() {
+    const notification = document.createElement('div');
+    notification.className = 'notification success';
+    notification.textContent = '网络连接已恢复';
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 3000);
+});
+
+window.addEventListener('offline', function() {
+    const notification = document.createElement('div');
+    notification.className = 'notification warning';
+    notification.textContent = '网络连接已断开，部分功能可能无法使用';
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 5000);
+});
+
+// 添加复制功能
+document.addEventListener('copy', function(event) {
+    const selection = window.getSelection();
+    if (selection.toString().includes('MYR') || selection.toString().includes('RMB')) {
+        // 可以在这里添加货币格式处理
+    }
+});
+
+// 初始化工具提示
+function initTooltips() {
+    const tooltips = document.querySelectorAll('[data-tooltip]');
+    tooltips.forEach(element => {
+        element.addEventListener('mouseenter', function() {
+            const tooltip = document.createElement('div');
+            tooltip.className = 'tooltip-text';
+            tooltip.textContent = this.getAttribute('data-tooltip');
+            this.appendChild(tooltip);
+        });
+        
+        element.addEventListener('mouseleave', function() {
+            const tooltip = this.querySelector('.tooltip-text');
+            if (tooltip) {
+                tooltip.remove();
+            }
+        });
+    });
+}
+
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', function() {
+    initTooltips();
+    
+    // 添加加载动画
+    const loadingOverlay = document.createElement('div');
+    loadingOverlay.className = 'loading-overlay';
+    loadingOverlay.style.display = 'none';
+    loadingOverlay.innerHTML = '<div class="loading-spinner"></div>';
+    document.body.appendChild(loadingOverlay);
+    
+    // 全局加载状态管理
+    const originalApiRequest = app._instance.apiRequest;
+    app._instance.apiRequest = async function(...args) {
+        loadingOverlay.style.display = 'flex';
+        try {
+            return await originalApiRequest.call(this, ...args);
+        } finally {
+            loadingOverlay.style.display = 'none';
+        }
+    };
+});
+
+// 添加通知函数
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// 添加到Vue实例
+app.config.globalProperties.$notify = showNotification;

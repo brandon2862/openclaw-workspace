@@ -1,0 +1,67 @@
+#!/bin/bash
+
+echo "🌐 AI创业诊断工具 - 功能测试"
+echo "============================"
+echo ""
+
+# 测试URL（GitHub Pages开启后）
+GITHUB_URL="https://lizgoldenfreight-stack.github.io/ai-startup-malaysia"
+
+echo "📊 测试计划："
+echo "1. 基础访问测试"
+echo "2. 页面功能测试"
+echo "3. 移动端兼容性"
+echo "4. 性能测试"
+echo ""
+
+echo "🔍 测试1: 基础访问"
+echo "-----------------"
+echo "等待GitHub Pages开启后测试："
+echo "curl -I $GITHUB_URL"
+echo "预期: HTTP 200 OK"
+echo ""
+
+echo "🖥️ 测试2: 页面功能"
+echo "----------------"
+echo "需要测试的页面："
+echo "1. $GITHUB_URL/ (index.html)"
+echo "2. $GITHUB_URL/simple-index.html"
+echo "3. $GITHUB_URL/landing.html"
+echo "4. $GITHUB_URL/index-with-form.html"
+echo ""
+
+echo "📱 测试3: 移动端兼容性"
+echo "---------------------"
+echo "检查点："
+echo "- 响应式布局正常"
+echo "- 触摸交互正常"
+echo "- 字体大小合适"
+echo "- 按钮大小合适"
+echo ""
+
+echo "⚡ 测试4: 性能测试"
+echo "----------------"
+echo "检查点："
+echo "- 页面加载时间 < 3秒"
+echo "- 资源压缩正常"
+echo "- 缓存设置合理"
+echo ""
+
+echo "🎯 成功标准："
+echo "------------"
+echo "✅ 所有页面可访问"
+echo "✅ 核心功能正常"
+echo "✅ 移动端显示正常"
+echo "✅ 性能达标"
+echo ""
+
+echo "🦐 测试负责人：海虾"
+echo "开始时间：GitHub Pages开启后立即开始"
+echo ""
+
+echo "💡 建议："
+echo "1. 你先开启GitHub Pages"
+echo "2. 分享链接给我"
+echo "3. 我立即开始全面测试"
+echo "4. 同时准备推广内容"
+echo ""

@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 自定义样式 */
+.todo-item {
+    @apply transition-all duration-200 ease-in-out;
+}
+
+.todo-item:hover {
+    @apply transform -translate-y-1 shadow-lg;
+}
+
+.completed {
+    @apply line-through text-gray-500;
+}
+
+/* 加载动画 */
+.loading-spinner {
+    @apply animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500;
+}
+
+/* 按钮动画 */
+.btn {
+    @apply transition-all duration-200 ease-in-out transform active:scale-95;
+}
+
+/* 表单样式 */
+.form-input {
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+}
+
+/* 响应式调整 */
+@media (max-width: 640px) {
+    .container {
+        @apply px-4;
+    }
+    
+    .todo-actions {
+        @apply flex flex-col space-y-2;
+    }
+}

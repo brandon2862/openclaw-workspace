@@ -1,0 +1,56 @@
+{
+  "version": "1.0",
+  "description": "OpenClaw AI Assistant Framework - 四层模型池配置",
+  "pools": {
+    "highspeed": {
+      "name": "高速池",
+      "description": "快速响应，适合简单任务",
+      "models": [
+        "xiaomi/mimo-v2-flash",
+        "openai/gpt-4o-mini"
+      ],
+      "default": "xiaomi/mimo-v2-flash",
+      "useCases": ["简单问答", "快速任务", "心跳检查"]
+    },
+    "intelligent": {
+      "name": "智能池",
+      "description": "平衡性能和质量",
+      "models": [
+        "xiaomi/mimo-v2-omni",
+        "openai/gpt-4o"
+      ],
+      "default": "xiaomi/mimo-v2-omni",
+      "useCases": ["复杂对话", "分析任务", "创意工作"]
+    },
+    "text": {
+      "name": "文本池",
+      "description": "专门处理文本任务",
+      "models": [
+        "openai/gpt-4o",
+        "anthropic/claude-3-sonnet"
+      ],
+      "default": "openai/gpt-4o",
+      "useCases": ["文档处理", "写作", "翻译", "总结"]
+    },
+    "vision": {
+      "name": "视觉池",
+      "description": "处理图像和视觉任务",
+      "models": [
+        "openai/gpt-4o",
+        "google/gemini-pro-vision"
+      ],
+      "default": "openai/gpt-4o",
+      "useCases": ["图像分析", "视觉理解", "图片生成"]
+    }
+  },
+  "routing": {
+    "autoSelect": true,
+    "fallbackPool": "highspeed",
+    "sessionPersistence": true
+  },
+  "limits": {
+    "maxTokensPerRequest": 20000,
+    "maxRetries": 5,
+    "timeoutSeconds": 120
+  }
+}

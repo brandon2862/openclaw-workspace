@@ -1,0 +1,15 @@
+# Large directories
+Deep-Live-Cam/
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+backup-*/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

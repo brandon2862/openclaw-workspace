@@ -1,0 +1,91 @@
+{
+  "timestamp": "2026-03-27T00:08:28.406285",
+  "stocks": [
+    {
+      "symbol": "JPM",
+      "name": "摩根大通",
+      "price": 131.06,
+      "change": 2.93,
+      "change_percent": 2.29,
+      "volume": 16175788
+    },
+    {
+      "symbol": "TSLA",
+      "name": "特斯拉",
+      "price": 64.72,
+      "change": 0.88,
+      "change_percent": 1.38,
+      "volume": 7695888
+    },
+    {
+      "symbol": "MSFT",
+      "name": "微软公司",
+      "price": 385.74,
+      "change": 3.99,
+      "change_percent": 1.05,
+      "volume": 23637745
+    },
+    {
+      "symbol": "META",
+      "name": "Meta(Facebook)",
+      "price": 447.8,
+      "change": 2.24,
+      "change_percent": 0.5,
+      "volume": 21644557
+    },
+    {
+      "symbol": "JNJ",
+      "name": "强生公司",
+      "price": 283.47,
+      "change": 1.2,
+      "change_percent": 0.42,
+      "volume": 24856965
+    },
+    {
+      "symbol": "AMZN",
+      "name": "亚马逊",
+      "price": 330.07,
+      "change": -3.16,
+      "change_percent": -0.95,
+      "volume": 15776571
+    },
+    {
+      "symbol": "NVDA",
+      "name": "英伟达",
+      "price": 109.24,
+      "change": -1.4,
+      "change_percent": -1.26,
+      "volume": 19111893
+    },
+    {
+      "symbol": "AAPL",
+      "name": "苹果公司",
+      "price": 121.01,
+      "change": -1.58,
+      "change_percent": -1.29,
+      "volume": 45358904
+    },
+    {
+      "symbol": "GOOGL",
+      "name": "谷歌(Alphabet)",
+      "price": 300.2,
+      "change": -4.24,
+      "change_percent": -1.39,
+      "volume": 7104242
+    },
+    {
+      "symbol": "V",
+      "name": "Visa",
+      "price": 121.6,
+      "change": -3.58,
+      "change_percent": -2.86,
+      "volume": 26620111
+    }
+  ],
+  "market_summary": {
+    "total_stocks": 10,
+    "average_price": 229.49099999999999,
+    "gainers": 5,
+    "losers": 5
+  }
+}

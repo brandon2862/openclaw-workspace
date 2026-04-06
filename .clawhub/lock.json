@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "skills": {
+    "trello": {
+      "version": "1.0.0",
+      "installedAt": 1774538689562
+    },
+    "python": {
+      "version": "1.0.0",
+      "installedAt": 1774855661198
+    },
+    "writer": {
+      "version": "1.0.2",
+      "installedAt": 1774855684834
+    },
+    "summarize": {
+      "version": "1.0.0",
+      "installedAt": 1774855709155
+    },
+    "image": {
+      "version": "1.0.4",
+      "installedAt": 1774855735318
+    },
+    "vibe-coding": {
+      "version": "1.0.0",
+      "installedAt": 1775257710581
+    },
+    "coding-lead": {
+      "version": "3.0.6",
+      "installedAt": 1775257719508
+    }
+  }
+}

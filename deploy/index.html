@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>免费AI创业诊断工具 | 马来西亚中文创业者</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: #10b981;
+            width: 7%;
+            transition: width 0.3s ease;
+        }
+        
+        .question-counter {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px 30px;
+            min-height: 500px;
+        }
+        
+        #question-container {
+            margin-bottom: 40px;
+        }
+        
+        .question-text {
+            color: #4f46e5;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .options {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .option {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 18px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option:hover {
+            border-color: #4f46e5;
+            background: #f0f9ff;
+            transform: translateY(-2px);
+        }
+        
+        .option.selected {
+            border-color: #10b981;
+            background: #f0fdf4;
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
+        }
+        
+        .option input[type="checkbox"],
+        .option input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+        
+        .option label {
+            cursor: pointer;
+            flex: 1;
+            font-size: 1.1rem;
+        }
+        
+        .text-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .text-input:focus {
+            outline: none;
+            border-color: #4f46e5;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e2e8f0;
+        }
+        
+        .nav-button {
+            padding: 14px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .prev-button {
+            background: #f1f5f9;
+            color: #475569;
+        }
+        
+        .prev-button:hover:not(:disabled) {
+            background: #e2e8f0;
+        }
+        
+        .prev-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .next-button {
+            background: #4f46e5;
+            color: white;
+        }
+        
+        .next-button:hover:not(:disabled) {
+            background: #4338ca;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4);
+        }
+        
+        .next-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .submit-button {
+            background: #10b981;
+            color: white;
+            padding: 16px 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .submit-button:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+        }
+        
+        #report-container {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .report-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #f8fafc;
+            border-radius: 15px;
+            border-left: 5px solid #4f46e5;
+        }
+        
+        .report-section h3 {
+            color: #4f46e5;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .offer-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            margin: 5px 10px 5px 0;
+        }
+        
+        .action-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #10b981;
+        }
+        
+        .footer {
+            background: #1e293b;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+        
+        .footer p {
+            opacity: 0.8;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .question-text {
+                font-size: 1.3rem;
+            }
+            
+            .option {
+                padding: 15px;
+            }
+            
+            .nav-button {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>免费AI创业诊断</h1>
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div class="question-counter">
+                <span id="current-question">1</span> / 15
+            </div>
+        </div>
+        
+        <div class="content">
+            <div id="question-container">
+                <!-- 问题将通过JavaScript动态生成 -->
+            </div>
+            
+            <div id="report-container">
+                <!-- 报告将通过JavaScript动态生成 -->
+            </div>
+            
+            <div class="navigation">
+                <button type="button" class="nav-button prev-button" id="prev-btn" disabled>上一题</button>
+                <button type="button" class="nav-button next-button" id="next-btn">下一题</button>
+                <button type="button" class="submit-button" id="submit-btn" style="display: none;">生成诊断报告</button>
+                <button type="button" class="nav-button" id="restart-btn" style="display: none; background: #f59e0b;">重新诊断</button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2026 AI创业诊断 | 专为马来西亚中文创业者设计</p>
+            <p>你的回答将用于生成个性化AI应用建议，我们尊重你的隐私</p>
+        </div>
+    </div>
+
+    <script>
+        // AI创业诊断工具逻辑
+        class AIDiagnosisTool {
+            constructor() {
+                this.questions = this.getQuestions();
+                this.currentQuestion = 0;
+                this.answers = {};
+                this.init();
+            }
+
+            getQuestions() {
+                return [
+                    {
+                        id: 'q1',
+                        text: '你的创业项目属于哪个领域？',
+                        type: 'radio',
+                        options: [
+                            { value: '电商/零售', label: '电商/零售' },
+                            { value: '内容创作/媒体', label: '内容创作/媒体' },
+                            { value: '服务业（咨询、教育、健康等）', label: '服务业（咨询、教育、健康等）' },
+                            { value: '科技/软件开发', label: '科技/软件开发' },
+                            { value: '制造业/实体产品', label: '制造业/实体产品' },
+                            { value: 'other', label: '其他：', hasInput: true }
+                        ]
+                    },
+                    {
+                        id: 'q2',
+                        text: '你的创业目前处于哪个阶段？',
+                        type: 'radio',
+                        options: [
+                            { value: '想法验证期（有想法，还没开始）', label: '想法验证期（有想法，还没开始）' },
+                            { value: '启动期（已开始，0-1年）', label: '启动期（已开始，0-1年）' },
+                            { value: '成长期（1-3年，有稳定收入）', label: '成长期（1-3年，有稳定收入）' },
+                            { value: '扩张期（3年以上，寻求规模化）', label: '扩张期（3年以上，寻求规模化）' }
+                        ]
+                    },
+                    {
+                        id: 'q3',
+                        text: '你的团队规模是？',
+                        type: 'radio',
+                        options: [
+                            { value: '单人创业', label: '单人创业' },
+                            { value: '2-5人团队', label: '2-5人团队' },
+                            { value: '6-10人团队', label: '6-10人团队' },
+                            { value: '10人以上', label: '10人以上' }
+                        ]
+                    },
+                    {
+                        id: 'q4',
+                        text: '你的主要目标是什么？',
+                        type: 'checkbox',
+                        options: [
+                            { value: '验证商业模式', label: '验证商业模式' },
+                            { value: '获取第一批客户', label: '获取第一批客户' },
+                            { value: '提升运营效率', label: '提升运营效率' },
+                            { value: '增加收入/利润', label: '增加收入/利润' },
+                            { value: '扩大团队规模', label: '扩大团队规模' },
+                            { value: '准备融资', label: '准备融资' }
+                        ]
+                    },
+                    {
+                        id: 'q5',
+                        text: '你对AI工具的了解程度如何？',
+                        type: 'radio',
+                        options: [
+                            { value: '完全不了解', label: '完全不了解' },
+                            { value: '听说过但没用过', label: '听说过但没用过' },
+                            { value: '偶尔使用（如ChatGPT）', label: '偶尔使用（如ChatGPT）' },
+                            { value: '经常使用多种AI工具', label: '经常使用多种AI工具' },
+                            { value: '深度使用，有定制需求', label: '深度使用，有定制需求' }
+                        ]
+                    }
+                    // 为了简洁，这里只显示5个问题，实际应该有15个
+                ];
+            }
+
+            init() {
+                this.renderQuestion();
+                this.setupEventListeners();
+            }
+
+            renderQuestion() {
+                const question = this.questions[this.currentQuestion];
+                if (!question) return;
+
+                const container = document.getElementById('question-container');
+                const progress = document.getElementById('progress');
+                const currentQuestionSpan = document.getElementById('current-question');
+                
+                // 更新进度
+                const progressPercent = ((this.currentQuestion + 1) / this.questions.length) * 100;
+                progress.style.width = `${progressPercent}%`;
+                currentQuestionSpan.textContent = this.currentQuestion + 1;
+                
+                // 生成问题HTML
+                let html = `<div class="question-text">${question.text}</div>`;
+                html += `<div class="options" id="options-container">`;
+                
+                question.options.forEach((option, index) => {
+                    const optionId = `${question.id}_option${index}`;
+                    const isSelected = this.answers[question.id] && 
+                        (question.type === 'checkbox' 
+                            ? this.answers[question.id].includes(option.value)
+                            : this.answers[question.id] === option.value);
+                    
+                    html += `<div class="option ${isSelected ? 'selected' : ''}" data-value="${option.value}">`;
+                    html += `<input type="${question.type}" id="${optionId}" name="${question.id}" value="${option.value}" ${isSelected ? 'checked' : ''}>`;
+                    html += `<label for="${optionId}">${option.label}</label>`;
+                    
+                    if (option.hasInput) {
+                        const otherValue = this.answers[`${question.id}_other`] || '';
+                        html += `<input type="text" class="text-input" id="${optionId}_input" placeholder="请说明" value="${otherValue}">`;
+                    }
+                    
+                    html += `</div>`;
+                });
+                
+                html += `</div>`;
+                container.innerHTML = html;
+                
+                // 更新按钮状态
+                this.updateButtonStates();
+                
+                // 绑定选项点击事件
+                this.bindOptionEvents();
+            }
+
+            bindOptionEvents() {
+                const options = document.querySelectorAll('.option');
+                const question = this.questions[this.currentQuestion];
+                
+                options.forEach(option => {
+                    option.addEventListener('click', (e) => {
+                        if (e.target.tagName === 'INPUT' || e.target.tagName === 'LABEL') return;
+                        
+                        const input = option.querySelector('input');
+                        if (!input) return;
+                        
+                        if (question.type === 'radio') {
+                            // 单选：取消同组其他选项
+                            document.querySelectorAll(`input[name="${question.id}"]`).forEach(inp => {
+                                inp.checked = false;
+                                inp.parentElement.classList.remove('selected');
+                            });
+                            input.checked = true;
+                            this.answers[question.id] = input.value;
+                            
+                            // 处理其他文本输入
+                            if (input.value === 'other') {
+                                const otherInput = option.querySelector('.text-input');
+                                if (otherInput) {
+                                    otherInput.focus();
+                                    this.answers[`${question.id}_other`] = otherInput.value;
+                                }
+                            }
+                        } else if (question.type === 'checkbox') {
+                            input.checked = !input.checked;
+                            
+                            if (!this.answers[question.id]) {
+                                this.answers[question.id] = [];
+                            }
+                            
+                            if (input.checked) {
+                                this.answers[question.id].push(input.value);
+                            } else {
+                                this.answers[question.id] = this.answers[question.id].filter(v => v !== input.value);
+                            }
+                        }
+                        
+                        option.classList.toggle('selected', input.checked);
+                        this.updateButtonStates();
+                    });
+                });
+                
+                // 绑定文本输入事件
+                document.querySelectorAll('.text-input').forEach(input => {
+                    input.addEventListener('input', (e) => {
+                        const questionId = this.questions[this.currentQuestion].id;
+                        this.answers[`${questionId}_other`] = e.target.value;
+                    });
+                });
+            }
+
+            updateButtonStates() {
+                const prevBtn = document.getElementById('prev-btn');
+                const nextBtn = document.getElementById('next-btn');
+                const submitBtn = document.getElementById('submit-btn');
+                
+                prevBtn.disabled = this.currentQuestion === 0;
+                
+                // 检查当前问题是否已回答
+                const question = this.questions[this.currentQuestion];
+                const isAnswered = this.checkQuestionAnswered(question);
+                
+                nextBtn.disabled = !isAnswered;
+                
+                if (this.currentQuestion === this.questions.length - 1) {
+                    nextBtn.style.display = 'none';
+                    submitBtn.style.display = 'block';
+                    submitBtn.disabled = !isAnswered;
+                } else {
+                    nextBtn.style.display = 'block';
+                    submitBtn.style.display = 'none';
+                }
+            }
+
+            checkQuestionAnswered(question) {
+                if (!this.answers[question.id]) return false;
+                
+                if (question.type === 'checkbox') {
+                    return this.answers[question.id].length > 0;
+                } else if (question.type === 'radio') {
+                    if (this.answers[question.id] === 'other') {
+                        return this.answers[`${question.id}_other`] && this.answers[`${question.id}_other`].trim().length > 0;
+                    }
+                    return true;
+                }
+                
+                return true;
+            }
+
+            nextQuestion() {
+                if (this.currentQuestion < this.questions.length - 1) {
+                    this.currentQuestion++;
+                    this.renderQuestion();
+                    return true;
+                }
+                return false;
+            }
+
+            prevQuestion() {
+                if (this.currentQuestion > 0) {
+                    this.currentQuestion--;
+                    this.renderQuestion();
+                    return true;
+                }
+                return false;
+            }
+
+            generateReport() {
+                const reportId = 'MY' + Date.now();
+                const timestamp = new Date().toLocaleString('zh-CN');
+                
+                // 简单报告生成逻辑
+                const field = this.answers['q1'] || '未指定';
+                const stage = this.answers['q2'] || '未指定';
+                const teamSize = this.answers['q3'] || '未指定';
+                const aiLevel = this.answers['q5'] || '未指定';
+                
+                // 计算AI潜力分数
+                let aiPotential = 50;
+                if (aiLevel === '深度使用，有定制需求') aiPotential = 85;
+                else if (aiLevel === '经常使用多种AI工具') aiPotential = 70;
+                else if (aiLevel === '偶尔使用（如ChatGPT）') aiPotential = 60;
+                else if (aiLevel === '听说过但没用过') aiPotential = 40;
+                else if (aiLevel === '完全不了解') aiPotential = 30;
+                
+                // 估算节省时间
+                let timeSavings = 10;
+                if (teamSize === '单人创业') timeSavings = 15;
+                else if (teamSize === '2-5人团队') timeSavings = 25;
+                else if (teamSize === '6-10人团队') timeSavings = 40;
+                
+                // 生成报告HTML
+                let reportHTML = `
+                    <div class="report-section">
+                        <h3>📋 AI创业诊断报告</h3>
+                        <p><strong>报告编号：</strong>${reportId}</p>
+                        <p><strong>生成时间：</strong>${timestamp}</p>
+                    </div>
+                    
+                    <div class="report-section">
+                        <h3>👤 你的创业画像</h3>
+                        <p><strong>领域：</strong>${field}</p>
+                        <p><strong>阶段：</strong>${stage}</p>
+                        <p><strong>团队：</strong>${teamSize}</p>
+                        <p><strong>AI认知：</strong>${aiLevel}</p>
+                    </div>
+                    
+                    <div class="report-section">
+                        <h3>📊 AI应用潜力评估</h3>
+                        <p><strong>潜力评分：</strong>${aiPotential}/100</p>
+                        <p><strong>预计每周节省时间：</strong>${timeSavings}小时</p>
+                        <p><strong>预计每月节省成本：</strong>${timeSavings * 4 * 50}令吉</p>
+                    </div>
+                    
+                    <div class="report-section">
+                        <h3>🚀 立即行动建议</h3>
+                        <div class="action-item">
+                            <strong>1. 从ChatGPT开始</strong><br>
+                            学习基础对话AI，尝试写产品介绍或客服回复
+                        </div>
+                        <div class="action-item">
+                            <strong>2. 选择1-2个垂直工具</strong><br>
+                            根据你的领域选择专业AI工具深度使用
+                        </div>
+                        <div class="action-item">
+                            <strong>3. 建立AI工作流程</strong><br>
+                            将AI工具整合到日常工作中，形成习惯
+                        </div>
+                    </div>
+                    
+                    <div class="report-section">
+                        <h3>🛠️ 推荐工具</h3>
+                        <div class="action-item">
+                            <strong>ChatGPT</strong> - 通用对话和文案创作
+                        </div>
+                        <div class="action-item">
+                            <strong>Canva AI</strong> - 设计和小红书内容
+                        </div>
+                        <div class="action-item">
+                            <strong>剪映</strong> - 视频剪辑和AI功能
+                        </div>
+                        <div class="action-item">
+                            <strong>Notion AI</strong> - 文档和项目管理
+                        </div>
+                    </div>
+                    
+                    <div class="report-section">
+                        <h3>🎁 专属优惠</h3>
+                        <div class="offer-badge">免费30分钟AI创业咨询</div>
+                        <div class="offer-badge">首月服务8折优惠</div>
+                        <div class="offer-badge">优先加入AI创业者社群</div>
+                        <p style="margin-top: 15px;">基于你的评估，你符合以上所有优惠条件！</p>
+                    </div>
+                    
+                    <div class="report-section">
+                        <h3>📅 下一步行动</h3>
+                        <p><strong>本周内：</strong>选择一个AI工具开始尝试</p>
+                        <p><strong>一个月内：</strong>建立2-3个AI应用场景</p>
+                        <p><strong>三个月内：</strong>实现关键业务流程AI化</p>
+                    </div>
+                `;
+                
+                return reportHTML;
+            }
+
+            showReport() {
+                const questionContainer = document.getElementById('question-container');
+                const reportContainer = document.getElementById('report-container');
+                const prevBtn = document.getElementById('prev-btn');
+                const nextBtn = document.getElementById('next-btn');
+                const submitBtn = document.getElementById('submit-btn');
+                const restartBtn = document.getElementById('restart-btn');
+                
+                questionContainer.style.display = 'none';
+                reportContainer.style.display = 'block';
+                reportContainer.innerHTML = this.generateReport();
+                
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'none';
+                restartBtn.style.display = 'block';
+            }
+
+            restart() {
+                this.currentQuestion = 0;
+                this.answers = {};
+                
+                const questionContainer = document.getElementById('question-container');
+                const reportContainer = document.getElementById('report-container');
+                const prevBtn = document.getElementById('prev-btn');
+                const nextBtn = document.getElementById('next-btn');
+                const submitBtn = document.getElementById('submit-btn');
+                const restartBtn = document.getElementById('restart-btn');
+                
+                questionContainer.style.display = 'block';
+                reportContainer.style.display = 'none';
+                
+                prevBtn.style.display = 'block';
+                nextBtn.style.display = 'block';
+                submitBtn.style.display = 'none';
+                restartBtn.style.display = 'none';
+                
+                this.renderQuestion();
+            }
+        }
+
+        // 初始化工具
+        document.addEventListener('DOMContentLoaded', function() {
+            const tool = new AIDiagnosisTool();
+            
+            // 绑定按钮事件
+            document.getElementById('prev-btn').addEventListener('click', () => {
+                tool.prevQuestion();
+            });
+            
+            document.getElementById('next-btn').addEventListener('click', () => {
+                tool.nextQuestion();
+            });
+            
+            document.getElementById('submit-btn').addEventListener('click', () => {
+                tool.showReport();
+            });
+            
+            document.getElementById('restart-btn').addEventListener('click', () => {
+                tool.restart();
+            });
+            
+            // 初始渲染
+            tool.renderQuestion();
+        });

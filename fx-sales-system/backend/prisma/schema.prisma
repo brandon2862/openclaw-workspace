@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  name          String
+  email         String    @unique
+  password_hash String
+  role          Role      @default(STAFF)
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+  
+  @@map("users")
+}
+
+model Customer {
+  id                    Int       @id @default(autoincrement())
+  customer_name         String
+  marking               String?
+  default_currency_pair String    @default("RMB/MYR")
+  recipient_name        String?
+  phone                 String?
+  bank_name            String?
+  bank_account         String?
+  remark               String?
+  created_at           DateTime  @default(now())
+  updated_at           DateTime  @updatedAt
+  
+  transactions         Transaction[]
+  
+  @@map("customers")
+}
+
+model Transaction {
+  id                Int       @id @default(autoincrement())
+  transaction_date  DateTime  @default(now())
+  customer_id       Int
+  currency_pair     String    @default("RMB/MYR")
+  source_amount     Decimal   @db.Decimal(15, 2)
+  source_currency   String    @default("RMB")
+  target_currency   String    @default("MYR")
+  agent_sx_cost     Decimal   @db.Decimal(10, 4)
+  option_1_rate     Decimal   @db.Decimal(10, 4)
+  option_2_rate     Decimal   @db.Decimal(10, 4)
+  option_3_rate     Decimal   @db.Decimal(10, 4)
+  manual_rate       Decimal?  @db.Decimal(10, 4)
+  selected_option   Int       @default(1)
+  selected_rate     Decimal   @db.Decimal(10, 4)
+  converted_amount  Decimal   @db.Decimal(15, 2)
+  pnl               Decimal   @db.Decimal(15, 2)
+  remark            String?
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+  
+  customer          Customer  @relation(fields: [customer_id], references: [id], onDelete: Cascade)
+  
+  @@map("transactions")
+}
+
+enum Role {
+  ADMIN
+  STAFF
+}
