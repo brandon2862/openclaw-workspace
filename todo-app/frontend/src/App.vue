@@ -54,247 +54,231 @@
         </div>
       </div>
 
-      <!-- 待办事项管理 -->
-      <div v-else>
-        <!-- 添加待办事项 -->
+      <!-- 待办事项列表 -->
+      <div v-else class="max-w-4xl mx-auto">
+        <!-- 添加新待办 -->
         <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-          <h2 class="text-xl font-bold mb-4">添加新待办事项</h2>
-          <form @submit.prevent="addTodo" class="space-y-4">
-            <div>
-              <input v-model="newTodo.title" type="text" class="form-input" placeholder="请输入待办事项标题" required>
-            </div>
-            <div>
-              <textarea v-model="newTodo.description" class="form-input" rows="3" placeholder="请输入描述（可选）"></textarea>
-            </div>
-            <button type="submit" class="btn bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600">
+          <h2 class="text-xl font-bold mb-4">添加新待办</h2>
+          <form @submit.prevent="addTodo" class="flex gap-4">
+            <input v-model="newTodo" type="text" class="form-input flex-1" placeholder="请输入待办事项..." required>
+            <select v-model="newPriority" class="form-input w-32">
+              <option value="low">低优先级</option>
+              <option value="medium">中优先级</option>
+              <option value="high">高优先级</option>
+            </select>
+            <button type="submit" class="btn bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600">
               添加
             </button>
           </form>
         </div>
 
         <!-- 筛选和统计 -->
-        <div class="flex flex-wrap justify-between items-center mb-6">
-          <div class="flex space-x-2 mb-4 md:mb-0">
-            <button @click="filter = 'all'" :class="['btn px-4 py-2 rounded-lg', filter === 'all' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700']">
-              全部 ({{ todos.length }})
-            </button>
-            <button @click="filter = 'active'" :class="['btn px-4 py-2 rounded-lg', filter === 'active' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700']">
-              进行中 ({{ activeTodos.length }})
-            </button>
-            <button @click="filter = 'completed'" :class="['btn px-4 py-2 rounded-lg', filter === 'completed' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700']">
-              已完成 ({{ completedTodos.length }})
-            </button>
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold">我的待办</h2>
+            <div class="flex gap-4">
+              <select v-model="filter" class="form-input">
+                <option value="all">全部</option>
+                <option value="pending">未完成</option>
+                <option value="completed">已完成</option>
+              </select>
+            </div>
           </div>
           
-          <div v-if="loading" class="loading-spinner"></div>
-        </div>
+          <!-- 统计 -->
+          <div class="grid grid-cols-4 gap-4 mb-6">
+            <div class="bg-blue-50 p-4 rounded-lg text-center">
+              <div class="text-2xl font-bold text-blue-600">{{ todos.length }}</div>
+              <div class="text-gray-600">总待办</div>
+            </div>
+            <div class="bg-green-50 p-4 rounded-lg text-center">
+              <div class="text-2xl font-bold text-green-600">{{ completedCount }}</div>
+              <div class="text-gray-600">已完成</div>
+            </div>
+            <div class="bg-yellow-50 p-4 rounded-lg text-center">
+              <div class="text-2xl font-bold text-yellow-600">{{ pendingCount }}</div>
+              <div class="text-gray-600">进行中</div>
+            </div>
+            <div class="bg-red-50 p-4 rounded-lg text-center">
+              <div class="text-2xl font-bold text-red-600">{{ highPriorityCount }}</div>
+              <div class="text-gray-600">高优先级</div>
+            </div>
+          </div>
 
-        <!-- 待办事项列表 -->
-        <div class="space-y-4">
-          <div v-if="filteredTodos.length === 0" class="text-center py-8 text-gray-500">
-            <i class="fas fa-clipboard-list text-4xl mb-4"></i>
-            <p>暂无待办事项</p>
-          </div>
-          
-          <div v-for="todo in filteredTodos" :key="todo.id" class="todo-item bg-white rounded-lg shadow p-4">
-            <div class="flex items-start justify-between">
+          <!-- 待办列表 -->
+          <div class="space-y-3">
+            <div v-for="todo in filteredTodos" :key="todo.id" 
+                 class="flex items-center gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
+                 :class="{ 'line-through opacity-50': todo.completed }">
+              <input type="checkbox" v-model="todo.completed" @change="toggleTodo(todo)" 
+                     class="w-5 h-5 text-blue-600 rounded">
               <div class="flex-1">
-                <div class="flex items-center">
-                  <input type="checkbox" :checked="todo.completed" @change="toggleTodo(todo)" class="mr-3 h-5 w-5">
-                  <h3 :class="['text-lg font-medium', todo.completed ? 'completed' : 'text-gray-800']">
-                    {{ todo.title }}
-                  </h3>
+                <div class="font-medium" :class="{ 'line-through text-gray-400': todo.completed }">
+                  {{ todo.title }}
                 </div>
-                <p v-if="todo.description" class="mt-2 text-gray-600">{{ todo.description }}</p>
-                <p class="mt-2 text-sm text-gray-500">
-                  <i class="far fa-clock mr-1"></i>
+                <div class="text-sm text-gray-500">
                   创建于：{{ formatDate(todo.created_at) }}
-                </p>
+                </div>
               </div>
-              
-              <div class="todo-actions flex space-x-2 ml-4">
-                <button @click="editTodo(todo)" class="btn bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button @click="deleteTodo(todo.id)" class="btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </div>
+              <span class="px-3 py-1 rounded-full text-sm"
+                    :class="{
+                      'bg-red-100 text-red-700': todo.priority === 'high',
+                      'bg-yellow-100 text-yellow-700': todo.priority === 'medium',
+                      'bg-green-100 text-green-700': todo.priority === 'low'
+                    }">
+                {{ getPriorityText(todo.priority) }}
+              </span>
+              <button @click="deleteTodo(todo.id)" class="btn text-red-500 hover:text-red-700">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+            
+            <div v-if="filteredTodos.length === 0" class="text-center py-8 text-gray-500">
+              暂无待办事项
             </div>
           </div>
         </div>
       </div>
     </main>
-
-    <!-- 编辑模态框 -->
-    <div v-if="editingTodo" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-        <h2 class="text-xl font-bold mb-4">编辑待办事项</h2>
-        <form @submit.prevent="updateTodo">
-          <div class="space-y-4">
-            <div>
-              <label class="block text-gray-700 mb-2">标题</label>
-              <input v-model="editingTodo.title" type="text" class="form-input" required>
-            </div>
-            <div>
-              <label class="block text-gray-700 mb-2">描述</label>
-              <textarea v-model="editingTodo.description" class="form-input" rows="3"></textarea>
-            </div>
-            <div class="flex items-center">
-              <input v-model="editingTodo.completed" type="checkbox" id="completed" class="mr-2">
-              <label for="completed" class="text-gray-700">已完成</label>
-            </div>
-          </div>
-          
-          <div class="flex justify-end space-x-3 mt-6">
-            <button type="button" @click="editingTodo = null" class="btn bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400">
-              取消
-            </button>
-            <button type="submit" class="btn bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-              保存
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
   </div>
 </template>
 
-<script setup>
-import { ref, computed, onMounted, watch } from 'vue'
-import { authAPI, todoAPI } from './services/api'
+<script>
+import { ref, computed, onMounted } from 'vue'
 
-// 响应式数据
-const currentUser = ref(null)
-const isLoginMode = ref(true)
-const authForm = ref({ name: '', email: '', password: '' })
-const todos = ref([])
-const newTodo = ref({ title: '', description: '' })
-const filter = ref('all')
-const loading = ref(false)
-const editingTodo = ref(null)
+export default {
+  name: 'App',
+  setup() {
+    const currentUser = ref(null)
+    const isLoginMode = ref(true)
+    const authForm = ref({
+      name: '',
+      email: '',
+      password: ''
+    })
+    const todos = ref([])
+    const newTodo = ref('')
+    const newPriority = ref('medium')
+    const filter = ref('all')
 
-// 计算属性
-const activeTodos = computed(() => todos.value.filter(todo => !todo.completed))
-const completedTodos = computed(() => todos.value.filter(todo => todo.completed))
-const filteredTodos = computed(() => {
-  switch (filter.value) {
-    case 'active': return activeTodos.value
-    case 'completed': return completedTodos.value
-    default: return todos.value
-  }
-})
+    // 加载用户和待办
+    onMounted(() => {
+      const user = localStorage.getItem('user')
+      if (user) {
+        currentUser.value = JSON.parse(user)
+        loadTodos()
+      }
+    })
 
-// 方法
-const toggleAuthMode = () => {
-  isLoginMode.value = !isLoginMode.value
-  authForm.value = { name: '', email: '', password: '' }
-}
+    const loadTodos = () => {
+      const stored = localStorage.getItem('todos_' + currentUser.value.email)
+      todos.value = stored ? JSON.parse(stored) : []
+    }
 
-const handleAuth = async () => {
-  try {
-    loading.value = true
-    const apiMethod = isLoginMode.value ? authAPI.login : authAPI.register
-    const response = await apiMethod(authForm.value)
-    
-    if (response.user) {
-      currentUser.value = response.user
-      localStorage.setItem('user', JSON.stringify(response.user))
+    const saveTodos = () => {
+      localStorage.setItem('todos_' + currentUser.value.email, JSON.stringify(todos.value))
+    }
+
+    const handleAuth = () => {
+      if (!authForm.value.email || !authForm.value.password) {
+        alert('请填写完整信息')
+        return
+      }
+      
+      if (!isLoginMode.value && !authForm.value.name) {
+        alert('请填写姓名')
+        return
+      }
+      
+      // 简单模拟登录/注册
+      const user = {
+        id: Date.now(),
+        name: authForm.value.name || authForm.value.email.split('@')[0],
+        email: authForm.value.email
+      }
+      localStorage.setItem('user', JSON.stringify(user))
+      currentUser.value = user
+      
       loadTodos()
     }
-    
-    alert(response.message)
-  } catch (error) {
-    alert(error.error || '操作失败')
-  } finally {
-    loading.value = false
-  }
-}
 
-const logout = () => {
-  currentUser.value = null
-  localStorage.removeItem('user')
-  todos.value = []
-}
+    const logout = () => {
+      localStorage.removeItem('user')
+      currentUser.value = null
+    }
 
-const loadTodos = async () => {
-  if (!currentUser.value) return
-  
-  try {
-    loading.value = true
-    const response = await todoAPI.getAll(currentUser.value.id, filter.value)
-    todos.value = response.todos || []
-  } catch (error) {
-    console.error('加载待办事项失败:', error)
-  } finally {
-    loading.value = false
-  }
-}
+    const toggleAuthMode = () => {
+      isLoginMode.value = !isLoginMode.value
+    }
 
-const addTodo = async () => {
-  if (!newTodo.value.title.trim()) return
-  
-  try {
-    const response = await todoAPI.create(currentUser.value.id, newTodo.value)
-    alert(response.message)
-    newTodo.value = { title: '', description: '' }
-    loadTodos()
-  } catch (error) {
-    alert(error.error || '添加失败')
-  }
-}
+    const addTodo = () => {
+      if (!newTodo.value.trim()) return
+      
+      todos.value.unshift({
+        id: Date.now(),
+        title: newTodo.value,
+        priority: newPriority.value,
+        completed: false,
+        created_at: new Date().toISOString()
+      })
+      
+      saveTodos()
+      newTodo.value = ''
+      newPriority.value = 'medium'
+    }
 
-const toggleTodo = async (todo) => {
-  try {
-    await todoAPI.update(currentUser.value.id, todo.id, {
-      completed: !todo.completed
+    const toggleTodo = (todo) => {
+      saveTodos()
+    }
+
+    const deleteTodo = (id) => {
+      if (confirm('确定删除这条待办吗？')) {
+        todos.value = todos.value.filter(t => t.id !== id)
+        saveTodos()
+      }
+    }
+
+    const filteredTodos = computed(() => {
+      if (filter.value === 'all') return todos.value
+      if (filter.value === 'pending') return todos.value.filter(t => !t.completed)
+      if (filter.value === 'completed') return todos.value.filter(t => t.completed)
+      return todos.value
     })
-    loadTodos()
-  } catch (error) {
-    alert(error.error || '更新失败')
+
+    const completedCount = computed(() => todos.value.filter(t => t.completed).length)
+    const pendingCount = computed(() => todos.value.filter(t => !t.completed).length)
+    const highPriorityCount = computed(() => todos.value.filter(t => t.priority === 'high' && !t.completed).length)
+
+    const formatDate = (date) => {
+      return new Date(date).toLocaleDateString('zh-CN')
+    }
+
+    const getPriorityText = (priority) => {
+      const map = { high: '高', medium: '中', low: '低' }
+      return map[priority] || priority
+    }
+
+    return {
+      currentUser,
+      isLoginMode,
+      authForm,
+      handleAuth,
+      logout,
+      toggleAuthMode,
+      todos,
+      newTodo,
+      newPriority,
+      filter,
+      addTodo,
+      toggleTodo,
+      deleteTodo,
+      filteredTodos,
+      completedCount,
+      pendingCount,
+      highPriorityCount,
+      formatDate,
+      getPriorityText
+    }
   }
 }
-
-const editTodo = (todo) => {
-  editingTodo.value = { ...todo }
-}
-
-const updateTodo = async () => {
-  if (!editingTodo.value) return
-  
-  try {
-    await todoAPI.update(currentUser.value.id, editingTodo.value.id, editingTodo.value)
-    editingTodo.value = null
-    loadTodos()
-  } catch (error) {
-    alert(error.error || '更新失败')
-  }
-}
-
-const deleteTodo = async (id) => {
-  if (!confirm('确定要删除这个待办事项吗？')) return
-  
-  try {
-    await todoAPI.delete(currentUser.value.id, id)
-    loadTodos()
-  } catch (error) {
-    alert(error.error || '删除失败')
-  }
-}
-
-const formatDate = (dateString) => {
-  return new Date(dateString).toLocaleString('zh-CN')
-}
-
-// 生命周期钩子
-onMounted(() => {
-  const savedUser = localStorage.getItem('user')
-  if (savedUser) {
-    currentUser.value = JSON.parse(savedUser)
-    loadTodos()
-  }
-})
-
-// 监听筛选变化
-watch(filter, loadTodos)
 </script>
