@@ -1,6 +1,6 @@
 # Video Automation Skill - 视频自动化能力
 
-基于 OpenClaw + ffmpeg + AI 的全自动视频剪裁能力
+基于 OpenClaw + ffmpeg 的全自动视频剪裁能力
 
 ## 🎯 核心能力
 
@@ -26,56 +26,73 @@ ffmpeg -i input.mp4 \
 - Instagram: 1:1 (1080x1080)
 
 ### 4. 批量处理 (Batch Processing)
-```
-@agent Process all videos in /recordings/raw/:
-1. Remove silences longer than 1 second
-2. Add subtitles via Whisper
-3. Add intro/outro from /templates/
-4. Export to /recordings/processed/
-Log each file's status as you go.
-```
+批量处理整个文件夹的视频
 
 ### 5. AI 视频生成 (ClawVid Pipeline)
-完整 AI 生成视频工作流：
-- **TTS-first**: 先生成配音
-- **Scene timing**: 根据音频长度计算场景时间
-- **Image generation**: fal.ai (kling-image/v3)
-- **Video clips**: Kling 2.6 Pro
-- **Music + SFX**: Beatoven
-- **Subtitles**: Whisper word-level
-- **Render**: Remotion 输出 16:9 + 9:16 双版本
+完整 AI 生成视频工作流（需要 fal.ai API）
+
+---
+
+## 🎨 风格滤镜 (Style Filters)
+
+预设 6 种风格，一键应用：
+
+| 风格 | 说明 | 命令 |
+|------|------|------|
+| `warm` | 暖色调 - 适合发给妈妈 | `./video-style.sh input.mp4 output.mp4 warm` |
+| `vintage` | 复古胶片感 | `./video-style.sh input.mp4 output.mp4 vintage` |
+| `cinematic` | 电影感 - 高对比 | `./video-style.sh input.mp4 output.mp4 cinematic` |
+| `fresh` | 小清新 - 明亮轻盈 | `./video-style.sh input.mp4 output.mp4 fresh` |
+| `cyberpunk` | 赛博朋克 - 霓虹色 | `./video-style.sh input.mp4 output.mp4 cyberpunk` |
+| `bw` | 黑白风格 | `./video-style.sh input.mp4 output.mp4 bw` |
+
+---
+
+## 🎬 片头片尾 (Intro/Outro)
+
+自动添加固定片头片尾模板：
+```bash
+./add-intro-outro.sh input.mp4 output.mp4 [intro.mp4] [outro.mp4]
+```
+
+---
+
+## 📦 批量处理 (Batch Processing)
+
+一键批量处理文件夹：
+```bash
+./batch-process.sh ./raw ./processed
+```
+
+---
 
 ## 🔧 工具要求
 
 - **必须**: ffmpeg (`brew install ffmpeg` 或 `sudo apt install ffmpeg`)
-- **可选**: Whisper API (OpenAI)
+- **可选**: OpenAI API Key (Whisper 字幕)
 - **可选**: fal.ai API (AI 生成)
-- **可选**: Remotion (视频渲染)
 
-## 📁 标准工作流
+---
 
-### 基础工作流 (无需外部API)
-1. 接收原始视频文件夹
-2. 批量去除静音片段
-3. 生成 Whisper 字幕
-4. 调整多平台尺寸
-5. 输出到处理后文件夹
+## 📁 脚本文件
 
-### AI 生成工作流 (需要 fal.ai)
-1. 用户输入 prompt
-2. 生成 TTS 配音
-3. 根据音频时长设计场景
-4. AI 生成图片/视频片段
-5. 添加背景音乐和音效
-6. 烧录字幕
-7. 渲染输出 MP4 (16:9 + 9:16)
+```
+scripts/video/
+├── video-style.sh        # 风格滤镜
+├── add-intro-outro.sh    # 片头片尾
+├── batch-process.sh      # 批量处理
+├── add-subtitles.sh      # 字幕生成 (需要API key)
+└── video-automation.sh   # 主自动化脚本
+```
+
+---
 
 ## 📝 使用示例
 
-"帮我把 `/videos/raw/` 文件夹里的视频去掉静音部分，加上字幕，并生成 TikTok 尺寸版本"
-
-"做一个30秒的AI科普视频，关于AI agents如何改变软件开发"
+"帮我把视频转成复古风格"
+"给视频加个片头 intro.mp4"
+"批量处理 videos/raw/ 文件夹"
 
 ---
-*Created: 2026-04-07*
-*Source: 小红书 + OpenClaw Playbook + Medium (ClawVid)*
+*Updated: 2026-04-07*
+*Features: 6 style filters, intro/outro, batch processing, subtitles*
