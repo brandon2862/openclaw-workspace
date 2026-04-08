@@ -1,0 +1,133 @@
+# 🤖 KAIROS 主动助手模式
+
+> 基于 Claude Code KAIROS 架构设计
+> 实现时间: 2026-04-08
+
+---
+
+## 概念说明
+
+KAIROS 是 Claude Code 的主动助手模式：
+- 不等待用户指令，主动发起行动
+- 监控工作状态，发现问题主动提醒
+- 定时执行任务
+- 发送推送通知
+
+---
+
+## 功能模块
+
+### 1. 主动监控
+
+```yaml
+monitor:
+  enabled: true
+  interval_minutes: 30
+  
+  # 监控项目
+  watch:
+    - type: "task_status"
+      check: "失败的任务"
+      action: "notify"
+    - type: "memory_usage"
+      threshold: "20KB"
+      action: "compact"
+    - type: "context_level"
+      threshold: 0.8
+      action: "compact"
+    - type: "heartbeat_missed"
+      count: 3
+      action: "alert"
+```
+
+### 2. 主动提醒
+
+```yaml
+notifications:
+  enabled: true
+  channels:
+    - telegram
+    # - email (future)
+  
+  triggers:
+    - event: "task_failed"
+      message: "任务失败: {task_name}"
+      priority: "high"
+    - event: "context_full"
+      message: "上下文即将满，执行压缩"
+      priority: "medium"
+    - event: "important_news"
+      message: "发现重要新闻: {title}"
+      priority: "low"
+```
+
+### 3. 定时任务
+
+```yaml
+scheduled:
+  enabled: true
+  
+  tasks:
+    - name: "morning_briefing"
+      time: "09:00"
+      action: "generate_daily_brief"
+    - name: "evening_summary"
+      time: "18:00"
+      action: "generate_daily_summary"
+    - name: "midnight_dream"
+      time: "02:00"
+      action: "dream_mode"
+```
+
+### 4. 问题检测
+
+```yaml
+problem_detection:
+  enabled: true
+  
+  patterns:
+    - name: "error_pattern"
+      detect: "error|failed|exception"
+      action: "log_and_notify"
+    - name: "performance_issue"
+      detect: "timeout|slow|lag"
+      action: "alert"
+    - name: "security_concern"
+      detect: "unauthorized|blocked|suspicious"
+      action: "alert_high"
+```
+
+---
+
+## 实现状态
+
+- [x] 配置文件定义
+- [ ] 主动监控逻辑
+- [ ] 通知发送
+- [ ] 定时任务执行
+- [ ] 问题检测
+
+---
+
+## 集成说明
+
+KAIROS 模式通过 heartbeat 机制实现：
+
+```python
+# 在 heartbeat 检查中
+if kairos_enabled:
+    # 主动检查
+    check_task_status()      # 检查任务状态
+    check_memory_usage()     # 检查记忆使用
+    check_context_level()    # 检查上下文
+    check_scheduled_tasks()  # 检查定时任务
+    
+    # 发现问题主动通知
+    if issues_found:
+        send_notification(issues)
+```
+
+---
+
+*参考: Claude Code 源码 - KAIROS autonomous daemon*
+*源码位置: src/assistant/, src/kairos.ts*

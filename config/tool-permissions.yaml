@@ -1,0 +1,166 @@
+# 🛡️ 工具权限四级分类系统
+
+> 基于 Claude Code 权限模型增强
+> 创建时间: 2026-04-08
+
+---
+
+## 权限等级说明
+
+| 等级 | 名称 | 行为 | 风险 | 示例工具 |
+|------|------|------|------|---------|
+| **L0** | Always | 自动允许 | 无 | read, glob, grep, web_search, web_fetch |
+| **L1** | First-Confirm | 首次确认后自动允许 | 低 | write, edit, task_create, task_list |
+| **L2** | Always-Confirm | 每次都需确认 | 中 | exec, git_push, ssh, network_calls |
+| **L3** | Block | 阻止并警告 | 高 | rm_rf, drop_table, system_config |
+
+---
+
+## 工具权限映射
+
+### L0 - Always (自动允许)
+
+```yaml
+tools:
+  - read              # 读取文件
+  - glob              # 文件搜索
+  - grep              # 内容搜索
+  - web_search        # 网络搜索
+  - web_fetch         # 获取网页
+  - memory_search     # 记忆搜索
+  - memory_get        # 读取记忆
+  - image             # 图片分析
+  - session_status    # 会话状态
+  - cron_list         # 查看定时任务
+  - nodes_status      # 节点状态
+```
+
+### L1 - First-Confirm (首次确认)
+
+```yaml
+tools:
+  - write             # 写入文件
+  - edit             # 编辑文件
+  - task_create      # 创建任务
+  - task_list        # 列表任务
+  - task_get         # 获取任务
+  - sessions_spawn   # 启动子agent
+  - sessions_send    # 发送消息
+  - tts              # 文字转语音
+  - image_generate   # 图片生成
+  - message_send     # 发送消息(需配置channel)
+```
+
+### L2 - Always-Confirm (每次确认)
+
+```yaml
+tools:
+  - exec             # 执行命令
+  - git_push         # Git推送
+  - git_force        # 强制推送
+  - ssh              # SSH连接
+  - crontab          # 定时任务管理
+  - gateway_config   # 网关配置
+  - config_apply     # 应用配置
+  - config_patch     # 补丁配置
+  - browser          # 浏览器控制
+  - process          # 进程管理
+```
+
+### L3 - Block (阻止)
+
+```yaml
+tools:
+  - rm_rf            # 递归删除
+  - drop_database    # 删除数据库
+  - system_reboot    # 系统重启
+  - system_shutdown  # 系统关机
+  - format_disk      # 格式化磁盘
+  - kill_system      # 杀死系统进程
+  - firewall_config  # 防火墙配置
+  - user_create      # 创建用户
+  - user_delete      # 删除用户
+  - chmod_777        # 危险权限修改
+```
+
+---
+
+## 权限模式
+
+### 模式说明
+
+| 模式 | 描述 | L0 | L1 | L2 | L3 |
+|------|------|----|----|----|----|
+| **ask** | 询问模式(默认) | ✅ | ❌→✅ | ❌ | ❌ |
+| **auto** | 智能模式(开发中) | ✅ | ✅ | ❌ | ❌ |
+| **bypass** | 信任模式 | ✅ | ✅ | ✅ | ❌ |
+| **strict** | 严格模式 | ✅ | ❌ | ❌ | ❌ |
+
+### 当前配置
+
+```yaml
+current_mode: "ask"  # 默认询问模式
+```
+
+---
+
+## 实现说明
+
+### 权限检查流程
+
+```
+1. 用户发送请求
+2. 识别工具类型
+3. 检查权限等级
+4. L0 → 直接执行
+5. L1 → 检查是否首次，是则确认，否则执行
+6. L2 → 每次确认
+7. L3 → 阻止并警告
+```
+
+### 首次确认机制
+
+- 记录每个(L1)工具的首次使用时间
+- 首次使用需要用户确认
+- 确认后记录到信任列表
+- 信任列表可被用户清空
+
+---
+
+## 安全规则
+
+### 危险命令模式识别
+
+```yaml
+dangerous_patterns:
+  exec:
+    - "rm -rf"
+    - "dd if="
+    - "mkfs"
+    - "> /dev/sd"
+    - "chmod -R 777"
+    - "chown -R"
+  git:
+    - "git push --force"
+    - "git push --delete"
+    - "git reset --hard"
+  database:
+    - "DROP TABLE"
+    - "DELETE FROM.*WHERE"
+    - "TRUNCATE"
+```
+
+---
+
+## 后续增强
+
+- [ ] 实现 auto 模式 (LLM判断)
+- [ ] 危险模式识别
+- [ ] 用户信任列表持久化
+- [ ] 权限使用统计
+- [ ] 告警通知
+
+---
+
+*基于 Claude Code 源码分析中的权限模型*
+*参考: src/Tool.ts, src/state/toolPermissionContext*

@@ -1,0 +1,37 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-04-08T13:11:45.253631",
+  "static_parts": {
+    "workspace_rules": {
+      "filename": "AGENTS.md",
+      "description": "\u5de5\u4f5c\u89c4\u5219",
+      "size": 10112,
+      "hash": "e1b10b9e"
+    },
+    "agent_persona": {
+      "filename": "SOUL.md",
+      "description": "\u4eba\u683c\u5b9a\u4e49",
+      "size": 2895,
+      "hash": "39c6ecdd"
+    },
+    "user_basic": {
+      "filename": "USER.md",
+      "description": "\u7528\u6237\u4fe1\u606f",
+      "size": 513,
+      "hash": "b672ec4d"
+    },
+    "agent_identity": {
+      "filename": "IDENTITY.md",
+      "description": "AI\u8eab\u4efd",
+      "size": 776,
+      "hash": "02791f47"
+    },
+    "longterm_memory": {
+      "filename": "MEMORY.md",
+      "description": "\u957f\u671f\u8bb0\u5fc6",
+      "size": 5778,
+      "hash": "082691c0"
+    }
+  },
+  "total_size": 20074
+}

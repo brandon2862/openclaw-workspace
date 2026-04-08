@@ -1,0 +1,178 @@
+# 📦 上下文压缩五层策略
+
+> 基于 Claude Code 的上下文管理优化
+> 实现时间: 2026-04-08
+
+---
+
+## 五层压缩策略
+
+Claude Code 使用多层压缩策略来管理上下文：
+
+| 层级 | 名称 | 触发条件 | 动作 |
+|------|------|----------|------|
+| L1 | Micro Compact | 每次工具调用后 | 清理旧工具输出 |
+| L2 | Auto Compact | tokens > 80% | 总结+保留最近3轮 |
+| L3 | Session Memory | 每10轮 | 提取关键信息到文件 |
+| L4 | Full Compact | tokens > 95% | 压缩整个对话历史 |
+| L5 | Truncate | 最后手段 | 丢弃最旧消息组 |
+
+---
+
+## 各层详细说明
+
+### L1: Micro Compact
+
+**触发**: 每次 tool_use 后
+
+**动作**:
+- 清理旧 tool_result 内容（保留结构）
+- 只保留最近 3 轮 (user + assistant)
+- 删除超过 5000 字符的输出
+
+```python
+def micro_compact(messages):
+    for msg in messages[:-6]:  # 保留最近3轮
+        if msg.type == 'tool_result':
+            msg.content = truncate(msg.content, 1000)
+```
+
+### L2: Auto Compact
+
+**触发**: context_tokens > 160,000 (80% of 200K)
+
+**动作**:
+- 总结对话片段
+- 保留最近 3 轮完整消息
+- 压缩中间历史
+- 保持关键文件上下文
+
+```python
+def auto_compact(messages):
+    recent = messages[-6:]  # 最近3轮
+    middle = messages[:-6]  # 中间部分
+    summary = summarize(middle)
+    return recent + [summary]
+```
+
+### L3: Session Memory
+
+**触发**: 每 10 轮对话
+
+**动作**:
+- 提取关键信息：
+  - 重要决策和结果
+  - 文件变更
+  - 用户偏好
+  - 错误和解决方案
+- 保存到 memory/ 目录
+- 清理已保存的会话部分
+
+```python
+def session_memory_compact(messages):
+    key_info = extract_key_info(messages)
+    save_to_memory(key_info)
+    return truncate_messages(messages, keep_recent=10)
+```
+
+### L4: Full Compact
+
+**触发**: tokens > 190,000 (95%)
+
+**动作**:
+- 压缩整个对话为摘要
+- 保留：摘要 + MEMORY.md + 活跃文件 + 当前计划
+- 预算: 50,000 tokens
+
+```python
+def full_compact(messages):
+    summary = full_summarize(messages)
+    return {
+        "summary": summary,
+        "memory": read(MEMORY.md),
+        "active_files": get_active_files(),
+        "current_plan": get_current_plan(),
+    }
+```
+
+### L5: Truncate
+
+**触发**: tokens > 195,000 (接近满)
+
+**动作**:
+- 丢弃最旧的消息组
+- 保留最重要的上下文
+- 最后手段
+
+```python
+def truncate(messages):
+    # 保留最近的系统提示 + 用户最近消息
+    system = messages[0]  # system prompt
+    recent = messages[-10:]  # 最近10条
+    return [system] + recent
+```
+
+---
+
+## 关键阈值
+
+```yaml
+thresholds:
+  context_window: 200000  # 200K tokens
+  auto_compact_trigger: 160000  # 80%
+  full_compact_trigger: 190000  # 95%
+  manual_compact_buffer: 3000  # 手动压缩节省空间
+  default_max_output: 8000  # 默认输出限制
+  output_escalates_to: 64000  # 满了自动升级
+  session_memory_min: 10000
+  session_memory_max: 40000
+  post_compact_restore: 50000  # 5文件 max, 5K each
+```
+
+---
+
+## 压缩效果对比
+
+| 策略 | tokens保留 | 压缩率 | 丢失风险 |
+|------|-----------|--------|---------|
+| Micro | 90% | 10% | 无 |
+| Auto | 60% | 40% | 低 |
+| Session | 40% | 60% | 中 |
+| Full | 25% | 75% | 中高 |
+| Truncate | 15% | 85% | 高 |
+
+---
+
+## OpenClaw 当前状态
+
+| 层级 | 当前实现 | 状态 |
+|------|---------|------|
+| L1 Micro | 有基本清理 | ✅ 可增强 |
+| L2 Auto | 触发时压缩 | ✅ 已实现 |
+| L3 Session | Heartbeat时提取 | ✅ 可优化 |
+| L4 Full | 无 | ⏳ 待实现 |
+| L5 Truncate | 无 | ⏳ 待实现 |
+
+---
+
+## 实现建议
+
+```python
+# 建议在 OpenClaw 中添加的压缩钩子
+hooks:
+  pre_message:
+    - check_context_level
+      threshold: 0.8
+      
+  post_tool:
+    - micro_compact
+      keep_recent: 3
+      
+  every_10_rounds:
+    - session_memory_extraction
+```
+
+---
+
+*参考: Claude Code 源码 - src/services/compact/*
+*来源: noya21th/claude-source-leaked*

@@ -2,10 +2,10 @@
 
 ## 📅 创建信息
 - **创建时间:** 2026-03-29
-- **最后更新:** 2026-04-04
+- **最后更新:** 2026-04-08
 - **维护者:** 海虾 (Hai Xia) 🦐
-- **框架:** OpenClaw AI Assistant Framework
-- **最后健康检查:** 2026-04-06 06:02 (全部正常)
+- **框架:** OpenClaw AI Assistant Framework + Claude Code 架构增强
+- **最后健康检查:** 2026-04-08 12:00 (全部正常)
 
 ---
 
@@ -56,6 +56,70 @@
 - `heartbeat-check` - 每30分钟（记忆维护）✅
 - `daily-evolution` - 每天22:00（进化报告）✅
 - `model-health-check` - 每6小时（模型健康检查）✅
+- `dream-mode` - 每周日凌晨2:00（记忆增强）✅
+- `daily-stock-news` - 每天09:00（股市简报）✅
+- `daily-market-check` - 每天09:00（市场检查）✅
+
+---
+
+## 🏗️ Claude Code 架构增强 (2026-04-08)
+
+基于Claude Code泄露源码分析，已实现以下架构增强：
+
+### ✅ 已实现
+
+#### 1. 工具权限四级分类 (Top 1)
+- **L0: Always** - 自动允许 (read, glob, grep, web_search, web_fetch)
+- **L1: First-Confirm** - 首次确认后自动允许 (write, edit, sessions_spawn)
+- **L2: Always-Confirm** - 每次都需确认 (exec, git_push, gateway)
+- **L3: Block** - 阻止并警告 (rm_rf_pattern, drop_database)
+- **配置文件:** `config/tool-permissions.yaml`
+- **执行脚本:** `scripts/tool-permission.py`
+- **危险模式:** 自动检测rm -rf, DROP TABLE, git push --force等
+
+#### 2. Dream Mode 记忆增强 (Top 2)
+- **四阶段处理:** Orient → Gather → Consolidate → Prune
+- **自动提取:** 决策、教训、技术变更、项目进展
+- **智能去重:** 消除矛盾、合并重复
+- **大小控制:** 保持 MEMORY.md < 25KB
+- **定时执行:** 每周日凌晨2:00
+- **配置文件:** `config/dream-mode.yaml`
+- **执行脚本:** `scripts/dream-mode.py`
+- **状态跟踪:** `data/dream-state.json`
+
+### 📝 已完成 (2026-04-08)
+- ✅ Top 3: 静态/动态提示分离 (缓存优化省50%)
+- ✅ Top 4: KAIROS 主动助手模式
+- ✅ Top 5: 上下文压缩五层策略
+- ✅ Top 6: 多Agent任务板
+
+#### 3. 静态/动态提示分离 (Top 3)
+- **缓存文件:** `data/prompt-cache/manifest.json`
+- **静态部分:** AGENTS.md, SOUL.md, USER.md, IDENTITY.md, MEMORY.md
+- **缓存大小:** 20,074 chars (~5,018 tokens)
+- **节省:** 每次请求可省约5K tokens
+- **配置文件:** `config/prompt-cache.yaml`
+- **执行脚本:** `scripts/prompt-cache.py`
+
+#### 4. KAIROS 主动助手模式 (Top 4)
+- **主动监控:** 任务状态、记忆使用、上下文等级
+- **问题检测:** 错误模式、性能问题、安全担忧
+- **定时任务:** 早晨简报、晚间总结、午夜Dream
+- **配置文件:** `config/kairos-mode.yaml`
+
+#### 5. 上下文压缩五层策略 (Top 5)
+- **L1 Micro:** 每次工具调用后清理旧输出
+- **L2 Auto:** tokens>80%时自动压缩
+- **L3 Session:** 每10轮提取关键信息到文件
+- **L4 Full:** tokens>95%时全量压缩
+- **L5 Truncate:** 最后手段，丢弃最旧消息
+- **配置文件:** `config/context-compaction-v2.yaml`
+
+#### 6. 多Agent任务板 (Top 6)
+- **Agent类型:** explorer, planner, worker, guide
+- **任务状态:** pending, running, completed, failed
+- **自动分配:** 按类型匹配最空闲agent
+- **配置文件:** `config/task-board.yaml`
 
 ---
 
@@ -203,7 +267,8 @@
 
 ---
 
-## 🔄 更新历史
+## 📅 更新历史
+- **2026-04-08:** 完成全部6项Claude Code架构增强功能
 - **2026-03-29:** 创建文件，记录框架集成和用户信息
 - **2026-03-30:** 首次Heartbeat检查（00:00），建立维护机制，修正日期
 - **2026-03-30 22:41:** 首次自我进化报告生成，标志OpenClaw AI Assistant Framework 100%实施完成

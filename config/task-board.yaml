@@ -1,0 +1,176 @@
+# 👥 多Agent任务板系统
+
+> 基于 Claude Code 的多Agent编排设计
+> 实现时间: 2026-04-08
+
+---
+
+## 概念说明
+
+Claude Code 的多Agent系统通过**共享任务板**协调：
+- 不直接调用，而是通过任务列表通信
+- 支持不同能力的Agent（只读 vs 完整权限）
+- 跨机器通过 Unix Domain Socket 通信
+
+---
+
+## Agent类型
+
+| 类型 | 能力 | 用途 |
+|------|------|------|
+| **explorer** | 只读工具 | 快速代码搜索、文件发现 |
+| **planner** | 只读工具 | 设计实现方案、任务分解 |
+| **worker** | 完整工具 | 执行具体任务 |
+| **guide** | 只读+文档 | 回答问题、提供指导 |
+
+---
+
+## 任务板设计
+
+```yaml
+task_board:
+  enabled: true
+  storage: "data/task-board/"
+  
+  # 任务状态
+  states:
+    - pending     # 待处理
+    - running     # 执行中
+    - completed   # 完成
+    - failed      # 失败
+    
+  # 任务优先级
+  priority:
+    high: 1
+    medium: 2
+    low: 3
+```
+
+---
+
+## OpenClaw 当前状态
+
+| 功能 | 当前实现 | 状态 |
+|------|---------|------|
+| sessions_spawn | 子agent启动 | ✅ 已实现 |
+| 任务状态 | 无统一管理 | ⏳ 待增强 |
+| 任务板 | 无 | ⏳ 待实现 |
+| Agent类型 | 无区分 | ⏳ 待实现 |
+
+---
+
+## 实现方案
+
+### 1. 任务板存储
+
+```json
+// data/task-board/manifest.json
+{
+  "version": "1.0",
+  "tasks": [
+    {
+      "id": "task-001",
+      "type": "explorer",
+      "title": "搜索代码库",
+      "description": "查找使用React的组件",
+      "status": "pending",
+      "priority": "medium",
+      "created_at": "2026-04-08T10:00:00Z",
+      "assigned_agent": null,
+      "result": null
+    }
+  ],
+  "agents": [
+    {
+      "id": "agent-001",
+      "type": "explorer",
+      "status": "idle",
+      "current_task": null
+    }
+  ]
+}
+```
+
+### 2. Agent类型配置
+
+```yaml
+agent_types:
+  explorer:
+    allowed_tools:
+      - read
+      - glob
+      - grep
+      - web_search
+      - web_fetch
+    timeout: 300
+    model: "xiaomi/mimo-v2-flash"
+    
+  planner:
+    allowed_tools:
+      - read
+      - memory_search
+    timeout: 600
+    model: "minimax/MiniMax-M2.5"
+    
+  worker:
+    allowed_tools:
+      - read
+      - write
+      - edit
+      - exec
+      - sessions_spawn
+    timeout: 1800
+    model: "minimax/MiniMax-M2.5"
+    
+  guide:
+    allowed_tools:
+      - read
+      - memory_search
+      - web_search
+    timeout: 300
+    model: "xiaomi/mimo-v2-flash"
+```
+
+### 3. 任务分配逻辑
+
+```python
+def assign_task(task, available_agents):
+    # 按类型匹配
+    suitable_agents = [a for a in available_agents if a.type == task.type]
+    
+    # 选择最空闲的
+    if suitable_agents:
+        return min(suitable_agents, key=lambda a: a.busy_score)
+    
+    # 无合适agent，排队等待
+    return None
+```
+
+---
+
+## 使用示例
+
+```bash
+# 创建任务
+python task-board.py create --type explorer --title "搜索API代码"
+
+# 查看任务板
+python task-board.py list
+
+# 执行任务
+python task-board.py run task-001
+```
+
+---
+
+## 集成计划
+
+1. **Phase 1**: 任务板存储和状态管理
+2. **Phase 2**: Agent类型配置和限制
+3. **Phase 3**: 自动任务分配
+4. **Phase 4**: 跨会话任务继承
+
+---
+
+*参考: Claude Code 源码 - src/coordinator/, src/buddy/*
+*来源: fattail4477/claw-decode hidden-features/05-team-multi-agent.md*
