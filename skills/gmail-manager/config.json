@@ -1,0 +1,9 @@
+{
+  "client_id": "AIzaSyDdnYWtIx2S_UdHbsaTUrsN96dIHz2qNNY",
+  "client_secret": "YOUR_CLIENT_SECRET",
+  "refresh_token": "YOUR_REFRESH_TOKEN",
+  "scopes": [
+    "https://www.googleapis.com/auth/gmail.modify",
+    "https://www.googleapis.com/auth/gmail.readonly"
+  ]
+}
