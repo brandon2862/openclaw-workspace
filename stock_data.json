@@ -1,91 +1,175 @@
 {
-  "timestamp": "2026-03-27T00:08:28.406285",
+  "timestamp": "2026-04-08T09:13:00.000Z",
   "stocks": [
     {
-      "symbol": "JPM",
-      "name": "摩根大通",
-      "price": 131.06,
-      "change": 2.93,
-      "change_percent": 2.29,
-      "volume": 16175788
-    },
-    {
-      "symbol": "TSLA",
-      "name": "特斯拉",
-      "price": 64.72,
-      "change": 0.88,
-      "change_percent": 1.38,
-      "volume": 7695888
-    },
-    {
-      "symbol": "MSFT",
-      "name": "微软公司",
-      "price": 385.74,
-      "change": 3.99,
-      "change_percent": 1.05,
-      "volume": 23637745
-    },
-    {
-      "symbol": "META",
-      "name": "Meta(Facebook)",
-      "price": 447.8,
-      "change": 2.24,
-      "change_percent": 0.5,
-      "volume": 21644557
-    },
-    {
-      "symbol": "JNJ",
-      "name": "强生公司",
-      "price": 283.47,
-      "change": 1.2,
-      "change_percent": 0.42,
-      "volume": 24856965
-    },
-    {
-      "symbol": "AMZN",
-      "name": "亚马逊",
-      "price": 330.07,
-      "change": -3.16,
-      "change_percent": -0.95,
-      "volume": 15776571
-    },
-    {
-      "symbol": "NVDA",
-      "name": "英伟达",
-      "price": 109.24,
-      "change": -1.4,
-      "change_percent": -1.26,
-      "volume": 19111893
-    },
-    {
-      "symbol": "AAPL",
-      "name": "苹果公司",
-      "price": 121.01,
-      "change": -1.58,
-      "change_percent": -1.29,
-      "volume": 45358904
-    },
-    {
-      "symbol": "GOOGL",
-      "name": "谷歌(Alphabet)",
-      "price": 300.2,
-      "change": -4.24,
-      "change_percent": -1.39,
-      "volume": 7104242
+      "symbol": "DIS",
+      "name": "The Walt Disney Company",
+      "price": 95.78,
+      "change": -0.50,
+      "change_percent": -0.52,
+      "premarket": 97.81,
+      "market_cap": "169.68B",
+      "pe_ratio": 14.10,
+      "eps": 6.79,
+      "dividend": 1.50,
+      "analyst_rating": "Strong Buy",
+      "price_target": 132.00,
+      "reason": "估值低，业绩反转，streaming业务好转"
     },
     {
       "symbol": "V",
-      "name": "Visa",
-      "price": 121.6,
-      "change": -3.58,
-      "change_percent": -2.86,
-      "volume": 26620111
+      "name": "Visa Inc.",
+      "price": 302.55,
+      "change": -0.78,
+      "change_percent": -0.26,
+      "premarket": 310.42,
+      "market_cap": "576.66B",
+      "pe_ratio": 28.42,
+      "eps": 10.65,
+      "dividend": 2.68,
+      "analyst_rating": "Strong Buy",
+      "price_target": 397.43,
+      "reason": "支付行业龙头，稳定增长"
+    },
+    {
+      "symbol": "JPM",
+      "name": "JPMorgan Chase & Co.",
+      "price": 185.00,
+      "change": 1.50,
+      "change_percent": 0.82,
+      "market_cap": "540B",
+      "pe_ratio": 11.5,
+      "analyst_rating": "Overweight",
+      "price_target": 210.00,
+      "reason": "美国最大银行，低估值，利率受益"
+    },
+    {
+      "symbol": "WMT",
+      "name": "Walmart Inc.",
+      "price": 122.49,
+      "change": -4.30,
+      "change_percent": -3.39,
+      "premarket": 124.20,
+      "market_cap": "976.54B",
+      "pe_ratio": 44.87,
+      "eps": 2.73,
+      "dividend": 0.99,
+      "analyst_rating": "Strong Buy",
+      "price_target": 130.84,
+      "reason": "零售巨头，电商转型成功"
+    },
+    {
+      "symbol": "JNJ",
+      "name": "Johnson & Johnson",
+      "price": 238.41,
+      "change": -2.56,
+      "change_percent": -1.06,
+      "premarket": 240.09,
+      "market_cap": "574.24B",
+      "pe_ratio": 21.61,
+      "eps": 11.03,
+      "dividend": 5.20,
+      "analyst_rating": "Buy",
+      "price_target": 233.42,
+      "reason": "防守型股票，高股息"
+    },
+    {
+      "symbol": "NVDA",
+      "name": "NVIDIA Corporation",
+      "price": 178.10,
+      "change": 0.46,
+      "change_percent": 0.26,
+      "premarket": 184.61,
+      "market_cap": "4.33T",
+      "pe_ratio": 36.35,
+      "eps": 4.90,
+      "dividend": 0.04,
+      "analyst_rating": "Strong Buy",
+      "price_target": 265.97
+    },
+    {
+      "symbol": "AAPL",
+      "name": "Apple Inc.",
+      "price": 253.50,
+      "change": -5.36,
+      "change_percent": -2.07,
+      "premarket": 259.18,
+      "market_cap": "3.72T",
+      "pe_ratio": 32.15,
+      "eps": 7.88,
+      "dividend": 1.04,
+      "analyst_rating": "Buy",
+      "price_target": 298.94
+    },
+    {
+      "symbol": "MSFT",
+      "name": "Microsoft Corporation",
+      "price": 372.29,
+      "change": -0.59,
+      "change_percent": -0.16,
+      "premarket": 385.16,
+      "market_cap": "2.76T",
+      "pe_ratio": 23.30,
+      "eps": 15.98,
+      "dividend": 3.64,
+      "analyst_rating": "Strong Buy",
+      "price_target": 596.81
+    },
+    {
+      "symbol": "META",
+      "name": "Meta Platforms Inc.",
+      "price": 575.05,
+      "change": 2.03,
+      "change_percent": 0.35,
+      "premarket": 602.00,
+      "market_cap": "1.45T",
+      "pe_ratio": 24.48,
+      "eps": 23.49,
+      "dividend": 2.10,
+      "analyst_rating": "Strong Buy",
+      "price_target": 835.60
+    },
+    {
+      "symbol": "TSLA",
+      "name": "Tesla Inc.",
+      "price": 381.26,
+      "change": 2.56,
+      "change_percent": 2.56,
+      "market_cap": "1.22T",
+      "analyst_rating": "Hold",
+      "price_target": 350.00
+    },
+    {
+      "symbol": "GOOGL",
+      "name": "Alphabet Inc.",
+      "price": 175.00,
+      "change": -2.00,
+      "change_percent": -1.13,
+      "market_cap": "2.1T",
+      "pe_ratio": 25.0,
+      "analyst_rating": "Buy",
+      "price_target": 200.00
+    },
+    {
+      "symbol": "AMZN",
+      "name": "Amazon.com Inc.",
+      "price": 178.00,
+      "change": 1.20,
+      "change_percent": 0.68,
+      "market_cap": "1.85T",
+      "pe_ratio": 45.0,
+      "analyst_rating": "Buy",
+      "price_target": 220.00
     }
   ],
+  "watchlist_top_picks": [
+    "DIS",
+    "V",
+    "JPM"
+  ],
   "market_summary": {
-    "total_stocks": 10,
-    "average_price": 229.49099999999999,
-    "gainers": 5,
-    "losers": 5
+    "total_stocks": 12,
+    "data_source": "stockanalysis.com",
+    "last_updated": "2026-04-08 17:13 GMT+8"
   }
 }
