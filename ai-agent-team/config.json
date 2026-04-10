@@ -1,0 +1,121 @@
+{
+  "aiAgentTeam": {
+    "version": "1.0.0",
+    "created": "2026-04-10",
+    "project": "马来西亚高端室内设计 AI Agent 团队"
+  },
+  "agents": [
+    {
+      "id": "ai-ceo",
+      "name": "AI CEO Agent",
+      "role": "战略决策与统筹",
+      "model": "xiaomi/mimo-v2-pro",
+      "description": "负责整个 AI Agent 团队的战略决策、目标设定、资源调配、绩效监控",
+      "capabilities": ["战略规划", "决策制定", "资源管理", "绩效评估", "对外沟通"],
+      "collaboratesWith": ["所有Agent", "创业者"]
+    },
+    {
+      "id": "business-coach",
+      "name": "企业教练 Agent",
+      "role": "团队优化与学习",
+      "model": "xiaomi/mimo-v2-flash",
+      "description": "辅导和优化各个 Agent 的工作表现，发现团队运营中的瓶颈和问题",
+      "capabilities": ["性能分析", "问题诊断", "优化建议", "学习机制", "创业者辅导"],
+      "collaboratesWith": ["所有Agent", "AI CEO", "创业者"]
+    },
+    {
+      "id": "market-insight",
+      "name": "市场洞察 Agent",
+      "role": "市场调研分析",
+      "model": "xiaomi/mimo-v2-flash",
+      "description": "负责市场调研、趋势分析、目标客群画像构建、竞争对手分析",
+      "capabilities": ["数据分析", "自然语言处理", "市场报告生成"],
+      "collaboratesWith": ["AI CEO", "企业教练", "客户寻访", "内容创作"]
+    },
+    {
+      "id": "client-acquisition",
+      "name": "客户寻访 Agent",
+      "role": "潜在客户获取",
+      "model": "xiaomi/mimo-v2-flash",
+      "description": "识别并筛选潜在高端客户、生成初步联系文案、管理潜在客户数据库",
+      "capabilities": ["社交媒体分析", "CRM系统集成", "自动化外联"],
+      "collaboratesWith": ["AI CEO", "企业教练", "市场洞察", "沟通协调"]
+    },
+    {
+      "id": "content-creation",
+      "name": "内容创作 Agent",
+      "role": "营销内容生成",
+      "model": "xiaomi/mimo-v2-flash",
+      "description": "根据目标客群和差异化策略，生成营销文案、设计概念、社交媒体内容",
+      "capabilities": ["文本生成", "图像生成", "视频脚本生成", "多模态内容创作"],
+      "collaboratesWith": ["AI CEO", "企业教练", "市场洞察", "沟通协调", "采购支持"]
+    },
+    {
+      "id": "communication",
+      "name": "沟通协调 Agent",
+      "role": "客户服务初步沟通",
+      "model": "xiaomi/mimo-v2-flash",
+      "description": "负责与潜在客户进行初步沟通、解答常见问题、安排会议、跟进销售流程",
+      "capabilities": ["自然语言理解与生成", "智能问答", "日程管理", "CRM更新"],
+      "collaboratesWith": ["AI CEO", "企业教练", "客户寻访", "内容创作", "销售转化"]
+    },
+    {
+      "id": "sales-conversion",
+      "name": "销售转化 Agent",
+      "role": "成交促进",
+      "model": "xiaomi/mimo-v2-pro",
+      "description": "协助销售团队进行客户需求分析、提供定制化方案建议、准备合同草案",
+      "capabilities": ["方案生成", "合同模板管理", "销售数据分析", "谈判策略辅助"],
+      "collaboratesWith": ["AI CEO", "企业教练", "沟通协调", "采购支持"]
+    },
+    {
+      "id": "procurement",
+      "name": "采购支持 Agent",
+      "role": "家私供应链管理",
+      "model": "xiaomi/mimo-v2-flash",
+      "description": "负责马来西亚及中国供应商筛选、产品信息收集、价格谈判辅助、物流协调",
+      "capabilities": ["供应链管理", "国际贸易知识", "多语言沟通", "数据对比"],
+      "collaboratesWith": ["AI CEO", "企业教练", "内容创作", "销售转化", "售后服务"],
+      "specialization": {
+        "focus": "马来西亚 + 中国家私供应链",
+        "markets": ["马来西亚本地供应商", "中国进口供应商"],
+        "productCategories": ["客厅家具", "餐厅家具", "卧室家具", "书房家具", "户外家具"]
+      }
+    },
+    {
+      "id": "after-sales",
+      "name": "售后服务 Agent",
+      "role": "客户关系维护",
+      "model": "xiaomi/mimo-v2-flash",
+      "description": "处理客户反馈、安排安装与维护、提供使用建议、收集客户满意度",
+      "capabilities": ["智能客服", "工单管理", "客户情感分析", "知识库管理"],
+      "collaboratesWith": ["AI CEO", "企业教练", "销售转化", "采购支持"]
+    }
+  ],
+  "workflow": {
+    "stage0": {
+      "name": "战略规划",
+      "agents": ["AI CEO", "企业教练"]
+    },
+    "stage1": {
+      "name": "找客户",
+      "agents": ["市场洞察", "客户寻访"]
+    },
+    "stage2": {
+      "name": "精准定位",
+      "agents": ["客户寻访", "沟通协调"]
+    },
+    "stage3": {
+      "name": "内容制作",
+      "agents": ["内容创作", "采购支持"]
+    },
+    "stage4": {
+      "name": "跟进成交",
+      "agents": ["销售转化", "采购支持", "沟通协调"]
+    },
+    "stage5": {
+      "name": "售后服务",
+      "agents": ["售后服务", "采购支持"]
+    }
+  }
+}
